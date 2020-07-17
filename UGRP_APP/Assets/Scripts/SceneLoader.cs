@@ -14,31 +14,39 @@ public class SceneLoader : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //empty here..
+        if(Input.GetKeyDown(KeyCode.Escape) == true)
+        {
+            if(SceneManager.GetActiveScene().name == "startScene")
+                quitApp();
+            else if(SceneManager.GetActiveScene().name == "SampleScene0")
+                startSceneN();
+            else
+                startScene0();
+        }
     }
 
     public void startSceneN()
     {
-        UnityEngine.SceneManagement.SceneManager.LoadScene("StartScene");
+        SceneManager.LoadScene("StartScene");
     }
     public void startScene0()
     {
-        UnityEngine.SceneManagement.SceneManager.LoadScene("SampleScene0");
+        SceneManager.LoadScene("SampleScene0");
     }
 
     public void startScene1()
     {
-        UnityEngine.SceneManagement.SceneManager.LoadScene("SampleScene1");
+        SceneManager.LoadScene("SampleScene1");
     }
 
     public void startScene2()
     {
-        UnityEngine.SceneManagement.SceneManager.LoadScene("SampleScene2");
+        SceneManager.LoadScene("SampleScene2");
     }
 
     public void startScene3()
     {
-        UnityEngine.SceneManagement.SceneManager.LoadScene("SampleScene3");
+        SceneManager.LoadScene("SampleScene3");
     }
 
     public void quitApp()
