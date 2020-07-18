@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class InputField : MonoBehaviour
+public class Input_SoundSelect : MonoBehaviour
 {
     // Start is called before the first frame update
     Text inputText;
