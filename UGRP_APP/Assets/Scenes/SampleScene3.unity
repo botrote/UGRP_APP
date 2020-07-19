@@ -190,7 +190,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 1
     m_VerticalOverflow: 1
     m_LineSpacing: 1
-  m_Text: I'm feature 3!!
+  m_Text: Sound Player
 --- !u!222 &96815233
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -269,7 +269,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Enter text...
+  m_Text: Enter clipname...
 --- !u!222 &214716306
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -1163,7 +1163,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Start Feature 3!!
+  m_Text: Play!!
 --- !u!222 &1285430174
 CanvasRenderer:
   m_ObjectHideFlags: 0

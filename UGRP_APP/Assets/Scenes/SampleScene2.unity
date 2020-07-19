@@ -1848,7 +1848,7 @@ GameObject:
   - component: {fileID: 1998134756}
   - component: {fileID: 1998134755}
   m_Layer: 5
-  m_Name: SaveText
+  m_Name: StatusText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1906,7 +1906,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 1
     m_VerticalOverflow: 1
     m_LineSpacing: 1
-  m_Text: SaveText tHere
+  m_Text: SaveText Here
 --- !u!222 &1998134756
 CanvasRenderer:
   m_ObjectHideFlags: 0

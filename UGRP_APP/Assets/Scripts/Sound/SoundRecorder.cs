@@ -7,12 +7,12 @@ public class SoundRecorder : MonoBehaviour
 {
     AudioSource audio;
     string clipName;
-    Text SaveText;
+    Text StatusText;
     // Start is called before the first frame update
     void Start()
     {
         audio = gameObject.GetComponent<AudioSource>();
-        SaveText = GameObject.Find("Canvas").transform.Find("SaveText").GetComponent<Text>();
+        StatusText = GameObject.Find("Canvas").transform.Find("StatusText").GetComponent<Text>();
     }
 
     // Update is called once per frame
@@ -24,6 +24,8 @@ public class SoundRecorder : MonoBehaviour
     public void RecordStart()
     {
         audio.clip = Microphone.Start(Microphone.devices[0], false, 60, 44100);
+        StatusText.enabled = true;
+        StatusText.text = "Recording..";
     }
 
     public void RecordEnd()
@@ -31,6 +33,8 @@ public class SoundRecorder : MonoBehaviour
         Microphone.End(Microphone.devices[0]);
         clipName = System.DateTime.Now.ToString().Replace("-", "").Replace(":", "").Replace(" ", "").Replace("P", "").Replace("M", "_");
         audio.clip.name = clipName;
+        StatusText.enabled = true;
+        StatusText.text = "Recording finished";
     }
 
     public void RecordPlay()
@@ -42,8 +46,8 @@ public class SoundRecorder : MonoBehaviour
     {
         
         SavWav.Save(clipName, audio.clip);
-        SaveText.enabled = true;
-        SaveText.text = "ClipName " + clipName + " saved"; 
+        StatusText.enabled = true;
+        StatusText.text = "ClipName " + clipName + " saved"; 
         
     }
 }
