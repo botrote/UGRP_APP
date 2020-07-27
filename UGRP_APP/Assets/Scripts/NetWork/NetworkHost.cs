@@ -8,6 +8,7 @@ using System.Collections.Generic;
 
 public class NetworkHost : MonoBehaviour
 {
+    public bool isActivate;
     public int port = 6321;
     public Text MessageText;
 
@@ -20,26 +21,49 @@ public class NetworkHost : MonoBehaviour
 
     private void Start()
     {
+        isActivate = false;
+    }
+
+    public void StartFeature()
+    {
+        isActivate = true;
         MessageText = GameObject.Find("NetworkStatusText").GetComponent<Text>();
         clients = new List<ServerClient>();
         disconnectList = new List<ServerClient>();
+        server = null;
 
         try
         {
-            server = new TcpListener(IPAddress.Any, port);
+            server = new TcpListener(IPAddress.Parse("192.168.56.1"), port);
             server.Start();
             StartListening();
             serverStarted = true;
             Debug.Log("Server has been started on port " + port.ToString());
+            Debug.Log("Server has been started on address " + server.LocalEndpoint.ToString());
         }
         catch (Exception e)
         {
             Debug.Log("Socket error : " + e.Message);
         }
+
+        string localIP = "Not available, please check your network seetings!";
+        IPHostEntry host = Dns.GetHostEntry(Dns.GetHostName());
+        foreach (IPAddress ip in host.AddressList)
+        {
+            if (ip.AddressFamily == AddressFamily.InterNetwork)
+            {
+                localIP = ip.ToString();
+                break;
+            }
+        }
+        Debug.Log(localIP);
+
     }
 
     private void Update()
     {
+        if(isActivate == false)
+            return;
         //count++;
         MessageText.text = count + "clients";
         if (!serverStarted)
@@ -131,16 +155,10 @@ public class NetworkHost : MonoBehaviour
             }
         }
     }
-}
 
-public class ServerClient
-{
-    public TcpClient tcp;
-    public string clientName;
-
-    public ServerClient(TcpClient clientSocket)
+    public void EndServer()
     {
-        clientName = "Guest";
-        tcp = clientSocket;
+        isActivate = false;
+        server.Stop();
     }
 }
