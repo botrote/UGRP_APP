@@ -11,6 +11,7 @@ public class NetworkHost : MonoBehaviour
     public bool isActivate;
     public int port = 6321;
     public Text MessageText;
+    public Text ClientMessageText;
 
     private List<ServerClient> clients;
     private List<ServerClient> disconnectList;
@@ -28,6 +29,7 @@ public class NetworkHost : MonoBehaviour
     {
         isActivate = true;
         MessageText = GameObject.Find("NetworkStatusText").GetComponent<Text>();
+        ClientMessageText = GameObject.Find("ClientMessageText").GetComponent<Text>();
         clients = new List<ServerClient>();
         disconnectList = new List<ServerClient>();
         server = null;
@@ -135,8 +137,8 @@ public class NetworkHost : MonoBehaviour
 
     private void onIncomingData(ServerClient c, string data)
     {
-        Debug.Log(c.clientName + "has sent the following message : " + data);
-        MessageText.text = data;
+        Debug.Log(c.clientName + " has sent the following message : " + data);
+        ClientMessageText.text = data;
     }
 
     private void Broadcast(string data, List<ServerClient> cl)

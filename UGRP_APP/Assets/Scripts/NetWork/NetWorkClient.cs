@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Net.Sockets;
 using System.Net;
+using System.Text;
 using System.IO;
 
 public class NetWorkClient : MonoBehaviour
@@ -26,6 +27,8 @@ public class NetWorkClient : MonoBehaviour
 
     public void StartFeature()
     {
+        if(isActivate == true)
+            return;
         isActivate = true;
         try
         {
@@ -34,6 +37,11 @@ public class NetWorkClient : MonoBehaviour
             clientSocket = new TcpClient(clientAddress);
             client = new ServerClient(clientSocket);
             client.tcp.Connect(serverAddress);
+            NetworkStream stream = client.tcp.GetStream();
+            string message = "Hello Host!!\n";
+            byte[] data = Encoding.Default.GetBytes(message);
+            Debug.Log(stream.CanWrite);
+            stream.Write(data, 0, data.Length); 
         }
         catch(SocketException e)
         {
