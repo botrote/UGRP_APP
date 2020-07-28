@@ -9,9 +9,11 @@ using System.Collections.Generic;
 public class NetworkHost : MonoBehaviour
 {
     public bool isActivate;
+    string localIP;
     public int port = 6321;
     public Text MessageText;
     public Text ClientMessageText;
+    public Text SocketExceptionText;
 
     private List<ServerClient> clients;
     private List<ServerClient> disconnectList;
@@ -23,32 +25,7 @@ public class NetworkHost : MonoBehaviour
     private void Start()
     {
         isActivate = false;
-    }
-
-    public void StartFeature()
-    {
-        isActivate = true;
-        MessageText = GameObject.Find("NetworkStatusText").GetComponent<Text>();
-        ClientMessageText = GameObject.Find("ClientMessageText").GetComponent<Text>();
-        clients = new List<ServerClient>();
-        disconnectList = new List<ServerClient>();
-        server = null;
-
-        try
-        {
-            server = new TcpListener(IPAddress.Parse("192.168.56.1"), port);
-            server.Start();
-            StartListening();
-            serverStarted = true;
-            Debug.Log("Server has been started on port " + port.ToString());
-            Debug.Log("Server has been started on address " + server.LocalEndpoint.ToString());
-        }
-        catch (Exception e)
-        {
-            Debug.Log("Socket error : " + e.Message);
-        }
-
-        string localIP = "Not available, please check your network seetings!";
+        localIP = null;
         IPHostEntry host = Dns.GetHostEntry(Dns.GetHostName());
         foreach (IPAddress ip in host.AddressList)
         {
@@ -58,8 +35,33 @@ public class NetworkHost : MonoBehaviour
                 break;
             }
         }
-        Debug.Log(localIP);
+        Debug.Log("hostIP : " + localIP);
+    }
 
+    public void StartFeature()
+    {
+        isActivate = true;
+        MessageText = GameObject.Find("NetworkStatusText").GetComponent<Text>();
+        ClientMessageText = GameObject.Find("ClientMessageText").GetComponent<Text>();
+        SocketExceptionText = GameObject.Find("SocketExceptionText").GetComponent<Text>();
+        clients = new List<ServerClient>();
+        disconnectList = new List<ServerClient>();
+        server = null;
+
+        try
+        {
+            server = new TcpListener(IPAddress.Parse(localIP), port);
+            server.Start();
+            StartListening();
+            serverStarted = true;
+            Debug.Log("Server has been started on port " + port.ToString());
+            Debug.Log("Server has been started on address " + server.LocalEndpoint.ToString());
+        }
+        catch (Exception e)
+        {
+            Debug.Log("Socket error : " + e.Message);
+            SocketExceptionText.text = e.Message;
+        }
     }
 
     private void Update()
