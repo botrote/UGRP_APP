@@ -14,6 +14,7 @@ public class NetworkHost : MonoBehaviour
     public Text MessageText;
     public Text ClientMessageText;
     public Text SocketExceptionText;
+    public Text HostInfoText;
 
     private List<ServerClient> clients;
     private List<ServerClient> disconnectList;
@@ -24,6 +25,15 @@ public class NetworkHost : MonoBehaviour
 
     private void Start()
     {
+        MessageText = GameObject.Find("NetworkStatusText").GetComponent<Text>();
+        MessageText.text = "";
+        ClientMessageText = GameObject.Find("ClientMessageText").GetComponent<Text>();
+        ClientMessageText.text = "";
+        SocketExceptionText = GameObject.Find("SocketExceptionText").GetComponent<Text>();
+        SocketExceptionText.text = "";
+        HostInfoText = GameObject.Find("HostInfoText").GetComponent<Text>();
+        HostInfoText.text = "";
+
         isActivate = false;
         localIP = null;
         IPHostEntry host = Dns.GetHostEntry(Dns.GetHostName());
@@ -40,10 +50,9 @@ public class NetworkHost : MonoBehaviour
 
     public void StartFeature()
     {
+        if(isActivate == true)
+            return;
         isActivate = true;
-        MessageText = GameObject.Find("NetworkStatusText").GetComponent<Text>();
-        ClientMessageText = GameObject.Find("ClientMessageText").GetComponent<Text>();
-        SocketExceptionText = GameObject.Find("SocketExceptionText").GetComponent<Text>();
         clients = new List<ServerClient>();
         disconnectList = new List<ServerClient>();
         server = null;
@@ -54,11 +63,12 @@ public class NetworkHost : MonoBehaviour
             server.Start();
             StartListening();
             serverStarted = true;
-            Debug.Log("Server has been started on port " + port.ToString());
             Debug.Log("Server has been started on address " + server.LocalEndpoint.ToString());
+            HostInfoText.text = "Server has been started on address " + server.LocalEndpoint.ToString();
         }
         catch (Exception e)
         {
+            isActivate = false;
             Debug.Log("Socket error : " + e.Message);
             SocketExceptionText.text = e.Message;
         }
