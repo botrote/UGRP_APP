@@ -102,7 +102,7 @@ public class NetWorkClient : MonoBehaviour
 
     public void OnInputMessage()
     {
-        inputMessage = inputMessageField.text + "\n";
+        inputMessage = inputMessageField.text;
         ((Text)inputMessageField.placeholder).text = "Message set to " + inputMessage; 
         inputMessageField.text = "";
         Debug.Log("End Called : " + inputMessage);

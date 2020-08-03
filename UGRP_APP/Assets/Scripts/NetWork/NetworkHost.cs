@@ -4,6 +4,8 @@ using System.Net;
 using System;
 using System.IO;
 using UnityEngine.UI;
+using System.Collections;
+using System.Text;
 using System.Collections.Generic;
 
 public class NetworkHost : MonoBehaviour
@@ -90,10 +92,12 @@ public class NetworkHost : MonoBehaviour
                 c.tcp.Close();
                 clients.Remove(c);
                 disconnectList.Add(c);
+                count--;
                 continue;
             }
             else
             {
+                /*
                 NetworkStream s = c.tcp.GetStream();
                 if (s.DataAvailable)
                 {
@@ -102,6 +106,25 @@ public class NetworkHost : MonoBehaviour
                     if (data != null)
                         onIncomingData(c, data);
                 }
+                */
+
+
+                byte[] data = new byte[4096];
+                NetworkStream s = c.tcp.GetStream();
+
+                if(s.DataAvailable)
+                {
+                    s.Read(data, 0, data.Length);
+                }
+                else
+                {
+                    return;
+                }
+
+                string encoded = Encoding.Default.GetString(data);
+
+                if(encoded != null)
+                    onIncomingData(c, encoded);
 
             }
 
@@ -175,4 +198,5 @@ public class NetworkHost : MonoBehaviour
         isActivate = false;
         server.Stop();
     }
+
 }
