@@ -23,6 +23,7 @@ public class NetworkHost : MonoBehaviour
     private TcpListener server;
     private bool serverStarted;
     private int count = 0;
+    public AudioSerializer audioSerializer;
 
 
     private void Start()
@@ -109,7 +110,7 @@ public class NetworkHost : MonoBehaviour
                 */
 
 
-                byte[] data = new byte[4096];
+                byte[] data = new byte[2000000];
                 NetworkStream s = c.tcp.GetStream();
 
                 if(s.DataAvailable)
@@ -124,7 +125,10 @@ public class NetworkHost : MonoBehaviour
                 string encoded = Encoding.Default.GetString(data);
 
                 if(encoded != null)
-                    onIncomingData(c, encoded);
+                {
+                    audioSerializer.StoreByteClip(data);
+                    //onIncomingData(c, encoded);
+                }
 
             }
 

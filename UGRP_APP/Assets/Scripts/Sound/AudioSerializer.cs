@@ -15,12 +15,18 @@ public class AudioSerializer : MonoBehaviour
 
     void Start()
     {
+        loadedAudio = null;
+        StartCoroutine(Test());
+    }
 
+    void Update()
+    {
+        //Debug.Log(isLoading);
     }
 
     private IEnumerator Test()
     {
-        yield return StartCoroutine(LoadAudioClipToByte("20200804_63934"));
+        yield return StartCoroutine(LoadAudioClipToByte("test"));
         yield return new WaitForSeconds(5);
         StoreByteClip(loadedAudio);
     }
@@ -42,7 +48,6 @@ public class AudioSerializer : MonoBehaviour
                 yield return null;
 
         AudioClip clip = tempWWW.GetAudioClip(false, false);
-        audioSource.clip = clip;
         float[] soundData = new float[clip.samples * clip.channels];
         clip.GetData(soundData, 0);
         
@@ -91,11 +96,11 @@ public class AudioSerializer : MonoBehaviour
         string fileName = Encoding.UTF8.GetString(b_fileName);
         Buffer.BlockCopy(data, 12+fileNameLength, soundData, 0, data.Length-12-fileNameLength);
 
-      
-
         AudioClip clip = AudioClip.Create(fileName, samples, channels, 44100, false);
         clip.SetData(soundData, 0);
         audioSource.clip = clip;
+
+        fileName = "test" + fileName;
         SavWav.Save(fileName, clip);
         return clip;
     }

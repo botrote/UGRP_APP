@@ -17,10 +17,12 @@ public class NetWorkClient : MonoBehaviour
     private IPEndPoint serverAddress;
     public Text SocketExceptionText;
     private Text ClinetInfoText;
+    private Text LogText;
     public InputField inputAddressField;
     private InputField inputMessageField;
     private string inputAddress;
     private string inputMessage;
+    public AudioSerializer audioSerializer;
     // Start is called before the first frame update
     void Start()
     {
@@ -33,6 +35,7 @@ public class NetWorkClient : MonoBehaviour
 
         SocketExceptionText = GameObject.Find("SocketExceptionText").GetComponent<Text>();
         ClinetInfoText = GameObject.Find("ClientInfoText").GetComponent<Text>();
+        LogText = GameObject.Find("LogText").GetComponent<Text>();
         SocketExceptionText.text = "";
         inputAddressField = GameObject.Find("AddressInputField").GetComponent<InputField>();
         inputMessageField = GameObject.Find("MessageInputField").GetComponent<InputField>();
@@ -55,6 +58,16 @@ public class NetWorkClient : MonoBehaviour
         
     }
 
+    public IEnumerator FileLoadCoroutine()
+    {
+        LogText.text = "File is loading... please wait...";
+        StartCoroutine(audioSerializer.LoadAudioClipToByte("test"));
+        while(audioSerializer.isLoading == true)
+            yield return null;
+        LogText.text = "File loading complete!";
+        StartFeature();
+    }
+
     public void StartFeature()
     {
         if(isActivate == true)
@@ -69,8 +82,10 @@ public class NetWorkClient : MonoBehaviour
             client.tcp.Connect(serverAddress);
             NetworkStream stream = client.tcp.GetStream();
             string message = inputMessage;
-            byte[] data = Encoding.Default.GetBytes(message);
+            //byte[] data = Encoding.Default.GetBytes(message);
+            byte[] data = audioSerializer.loadedAudio;
             Debug.Log(stream.CanWrite);
+            //Debug.Log(data == null);
             stream.Write(data, 0, data.Length); 
         }
         catch(SocketException e)
@@ -79,17 +94,24 @@ public class NetWorkClient : MonoBehaviour
             SocketExceptionText.text = e.Message;
             isActivate = false;
         }
+        /*
         catch(System.SystemException e)
         {
             Debug.Log("Format error : " + e.Message);
             SocketExceptionText.text = e.Message;
             isActivate = false;
         }
+        */
     }
 
     public void OnExit()
     {
         client.tcp.Close();
+    }
+
+    public void OnFeatureStart()
+    {
+        StartCoroutine(FileLoadCoroutine());
     }
 
     public void OnInputAddress()
