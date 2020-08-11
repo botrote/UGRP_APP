@@ -26,9 +26,9 @@ public class NetWorkClient : MonoBehaviour
     private string inputMessage;
     
     public ToggleGroup togglegroup;
-    private bool? inputType;
+    private bool? transferMode;
     public AudioSerializer audioSerializer;
-    public bool transferMode;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -36,7 +36,7 @@ public class NetWorkClient : MonoBehaviour
 
         isActivate = false;
         localIP = null;
-        transferMode = false;
+        transferMode = null;
         IPHostEntry host = Dns.GetHostEntry(Dns.GetHostName());
 
         inputAddress = "";
@@ -183,9 +183,12 @@ public class NetWorkClient : MonoBehaviour
         
         string id = currentSelection.name;
         //Debug.Log(id);
-        if(id == "File") inputType = true;
-        else if (id == "Text") inputType = false;
-        else inputType = null;
+        if(id == "File") 
+            transferMode = true;
+        else if (id == "Text") 
+            transferMode = false;
+        else 
+            transferMode = null;
         
         //Debug.Log("currentSelection: " + inputType.ToString());
     }    
