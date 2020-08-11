@@ -49,6 +49,8 @@ public class NetworkHost : MonoBehaviour
             }
         }
         Debug.Log("hostIP : " + localIP);
+        KeyInputManager keyInputManager = GameObject.Find("KeyInputManager").GetComponent<KeyInputManager>();
+        keyInputManager.EV_escape += EndServer;
     }
 
     public void StartFeature()
@@ -109,25 +111,35 @@ public class NetworkHost : MonoBehaviour
                 }
                 */
 
-
                 byte[] data = new byte[2000000];
+                byte[] modeBuffer = new byte[1];
                 NetworkStream s = c.tcp.GetStream();
 
                 if(s.DataAvailable)
-                {
-                    s.Read(data, 0, data.Length);
-                }
+                    s.Read(modeBuffer, 0, 1);
                 else
-                {
                     return;
-                }
-
+                
+                if(s.DataAvailable)
+                    s.Read(data, 0, data.Length);
+                else
+                    return;
+                
+                bool transferMode = Convert.ToBoolean(modeBuffer[0]);
                 string encoded = Encoding.Default.GetString(data);
 
                 if(encoded != null)
                 {
-                    audioSerializer.StoreByteClip(data);
-                    //onIncomingData(c, encoded);
+                    Debug.Log("transferMode" + transferMode.ToString());
+                    if(transferMode == true)
+                    {
+                        audioSerializer.StoreByteClip(data);
+                        onIncomingData(c, "audio file recieved");
+                    }
+                    if(transferMode == false)
+                    {
+                        onIncomingData(c, encoded);
+                    }
                 }
 
             }
@@ -200,7 +212,8 @@ public class NetworkHost : MonoBehaviour
     public void EndServer()
     {
         isActivate = false;
-        server.Stop();
+        if(server != null)
+            server.Stop();
     }
 
 }

@@ -15,8 +15,7 @@ public class AudioSerializer : MonoBehaviour
 
     void Start()
     {
-        loadedAudio = null;
-        StartCoroutine(Test());
+
     }
 
     void Update()
@@ -85,8 +84,8 @@ public class AudioSerializer : MonoBehaviour
         Buffer.BlockCopy(data, 4, b_channels, 0, 4);
         Buffer.BlockCopy(data, 8, b_fileNameLength, 0, 4);
 
-        int samples =BitConverter.ToInt32(b_samples, 0);
-        int channels =BitConverter.ToInt32(b_channels, 0);
+        int samples = BitConverter.ToInt32(b_samples, 0);
+        int channels = BitConverter.ToInt32(b_channels, 0);
         int fileNameLength = BitConverter.ToInt32(b_fileNameLength, 0);
 
         byte[] b_fileName = new byte[fileNameLength];

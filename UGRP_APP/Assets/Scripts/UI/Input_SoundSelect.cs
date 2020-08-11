@@ -6,11 +6,11 @@ using UnityEngine.UI;
 public class Input_SoundSelect : MonoBehaviour
 {
     // Start is called before the first frame update
-    Text inputText;
+    private InputField input_clipname;
     SoundPlayerManager sManager;
     void Start()
     {
-        inputText = transform.Find("Text").gameObject.GetComponent<Text>();
+        input_clipname = gameObject.GetComponent<InputField>();
         sManager = GameObject.Find("AudioPlayManager").GetComponent<SoundPlayerManager>();
     }
 
@@ -22,6 +22,8 @@ public class Input_SoundSelect : MonoBehaviour
 
     public void OnEndEdit()
     {
-        sManager.EnrollSound(inputText.text);
+        ((Text)input_clipname.placeholder).text = "clipname " + input_clipname.text + " enrolled"; 
+        sManager.EnrollSound(input_clipname.text);
+        input_clipname.text = "";
     }
 }

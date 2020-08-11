@@ -8,21 +8,24 @@ public class SceneLoader : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        //empty here..
+        KeyInputManager keyInputManager = GameObject.Find("KeyInputManager").GetComponent<KeyInputManager>();
+        keyInputManager.EV_escape += OnEscape;
     }
 
     // Update is called once per frame
     void Update()
     {
-        if(Input.GetKeyDown(KeyCode.Escape) == true)
-        {
-            if(SceneManager.GetActiveScene().name == "startScene")
-                quitApp();
-            else if(SceneManager.GetActiveScene().name == "SampleScene0")
-                startSceneN();
-            else
-                startScene0();
-        }
+
+    }
+
+    void OnEscape()
+    {
+        if(SceneManager.GetActiveScene().name == "startScene")
+            quitApp();
+        else if(SceneManager.GetActiveScene().name == "SampleScene0")
+            startSceneN();
+        else
+            startScene0();
     }
 
     public void startSceneN()

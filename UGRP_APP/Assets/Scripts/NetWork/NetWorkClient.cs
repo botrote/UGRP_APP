@@ -6,6 +6,7 @@ using System.Net;
 using System.Text;
 using System.IO;
 using UnityEngine.UI;
+using System;
 
 public class NetWorkClient : MonoBehaviour
 {
@@ -18,16 +19,18 @@ public class NetWorkClient : MonoBehaviour
     public Text SocketExceptionText;
     private Text ClinetInfoText;
     private Text LogText;
-    public InputField inputAddressField;
+    private InputField inputAddressField;
     private InputField inputMessageField;
     private string inputAddress;
     private string inputMessage;
     public AudioSerializer audioSerializer;
+    public bool transferMode;
     // Start is called before the first frame update
     void Start()
     {
         isActivate = false;
         localIP = null;
+        transferMode = false;
         IPHostEntry host = Dns.GetHostEntry(Dns.GetHostName());
 
         inputAddress = "";
@@ -50,6 +53,8 @@ public class NetWorkClient : MonoBehaviour
         }
         Debug.Log("Client IP : " + localIP);
         ClinetInfoText.text = "Client IP : " + localIP;
+        KeyInputManager keyInputManager = GameObject.Find("KeyInputManager").GetComponent<KeyInputManager>();
+        keyInputManager.EV_escape += EndConnect;
     }
 
     // Update is called once per frame
@@ -82,10 +87,23 @@ public class NetWorkClient : MonoBehaviour
             client.tcp.Connect(serverAddress);
             NetworkStream stream = client.tcp.GetStream();
             string message = inputMessage;
-            //byte[] data = Encoding.Default.GetBytes(message);
-            byte[] data = audioSerializer.loadedAudio;
-            Debug.Log(stream.CanWrite);
-            //Debug.Log(data == null);
+
+            byte[] data = null;
+            byte[] modeBuffer = new byte[1];
+            modeBuffer[0] = Convert.ToByte(transferMode);
+            stream.Write(modeBuffer, 0, 1);
+
+            if(transferMode == false) //transfer mesage
+            {
+                data = Encoding.Default.GetBytes(message);
+                LogText.text = "sended your message : " + message;
+            }
+            else if(transferMode == true)
+            {
+                data = audioSerializer.loadedAudio;
+                LogText.text = "sended your file : " + "test.wav";
+            }
+
             stream.Write(data, 0, data.Length); 
         }
         catch(SocketException e)
@@ -94,14 +112,13 @@ public class NetWorkClient : MonoBehaviour
             SocketExceptionText.text = e.Message;
             isActivate = false;
         }
-        /*
         catch(System.SystemException e)
         {
             Debug.Log("Format error : " + e.Message);
             SocketExceptionText.text = e.Message;
             isActivate = false;
         }
-        */
+        
     }
 
     public void OnExit()
@@ -111,7 +128,19 @@ public class NetWorkClient : MonoBehaviour
 
     public void OnFeatureStart()
     {
-        StartCoroutine(FileLoadCoroutine());
+        if(transferMode == null)
+        {
+            LogText.text = "please choose transfer mode";
+            return;
+        }
+        else if(transferMode == false) //transfer message
+        {
+            StartFeature();
+        }
+        else if(transferMode == true) //transfer file
+        {
+            StartCoroutine(FileLoadCoroutine());
+        }
     }
 
     public void OnInputAddress()
@@ -128,5 +157,12 @@ public class NetWorkClient : MonoBehaviour
         ((Text)inputMessageField.placeholder).text = "Message set to " + inputMessage; 
         inputMessageField.text = "";
         Debug.Log("End Called : " + inputMessage);
+    }
+
+    public void EndConnect()
+    {
+        isActivate = false;
+        if(clientSocket != null)
+            clientSocket.Close();
     }
 }
