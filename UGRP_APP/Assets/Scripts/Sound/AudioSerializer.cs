@@ -15,7 +15,8 @@ public class AudioSerializer : MonoBehaviour
 
     void Start()
     {
-
+        loadedAudio = null;
+        //StartCoroutine(Test());
     }
 
     void Update()
