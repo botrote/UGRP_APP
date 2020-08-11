@@ -6,6 +6,7 @@ using System.Net;
 using System.Text;
 using System.IO;
 using UnityEngine.UI;
+using System.Linq;
 
 public class NetWorkClient : MonoBehaviour
 {
@@ -22,10 +23,15 @@ public class NetWorkClient : MonoBehaviour
     private InputField inputMessageField;
     private string inputAddress;
     private string inputMessage;
+    
+    public ToggleGroup togglegroup;
+    private bool? inputType;
     public AudioSerializer audioSerializer;
     // Start is called before the first frame update
     void Start()
     {
+        togglegroup = GameObject.Find("Canvas").transform.Find("ToggleGroup").GetComponent<ToggleGroup>();
+
         isActivate = false;
         localIP = null;
         IPHostEntry host = Dns.GetHostEntry(Dns.GetHostName());
@@ -129,4 +135,22 @@ public class NetWorkClient : MonoBehaviour
         inputMessageField.text = "";
         Debug.Log("End Called : " + inputMessage);
     }
+    public Toggle currentSelection{
+        get{
+            return togglegroup.ActiveToggles().FirstOrDefault();
+        }
+    }
+    public void OnInputType()
+    {
+        
+        string id = currentSelection.name;
+        //Debug.Log(id);
+        if(id == "File") inputType = true;
+        else if (id == "Text") inputType = false;
+        else inputType = null;
+        
+        //Debug.Log("currentSelection: " + inputType.ToString());
+        
+    }    
+
 }
