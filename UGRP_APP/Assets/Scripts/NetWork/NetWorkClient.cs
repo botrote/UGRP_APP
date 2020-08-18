@@ -46,6 +46,8 @@ public class NetWorkClient : MonoBehaviour
         ClinetInfoText = GameObject.Find("ClientInfoText").GetComponent<Text>();
         LogText = GameObject.Find("LogText").GetComponent<Text>();
         SocketExceptionText.text = "";
+        LogText.text = "";
+        ClinetInfoText.text = "";
         inputAddressField = GameObject.Find("AddressInputField").GetComponent<InputField>();
         inputMessageField = GameObject.Find("MessageInputField").GetComponent<InputField>();
 
@@ -72,7 +74,7 @@ public class NetWorkClient : MonoBehaviour
     public IEnumerator FileLoadCoroutine()
     {
         LogText.text = "File is loading... please wait...";
-        StartCoroutine(audioSerializer.LoadAudioClipToByte("test"));
+        StartCoroutine(audioSerializer.LoadAudioClipToByte(inputMessage));
         while(audioSerializer.isLoading == true)
             yield return null;
         LogText.text = "File loading complete!";
@@ -81,16 +83,8 @@ public class NetWorkClient : MonoBehaviour
 
     public void StartFeature()
     {
-        if(isActivate == true)
-            return;
-        isActivate = true;
         try
         {
-            serverAddress = new IPEndPoint(IPAddress.Parse(inputAddress), 6321);
-            clientAddress = new IPEndPoint(IPAddress.Parse(localIP), 0);
-            clientSocket = new TcpClient(clientAddress);
-            client = new ServerClient(clientSocket);
-            client.tcp.Connect(serverAddress);
             NetworkStream stream = client.tcp.GetStream();
             string message = inputMessage;
 
@@ -104,27 +98,20 @@ public class NetWorkClient : MonoBehaviour
                 data = Encoding.Default.GetBytes(message);
                 LogText.text = "sended your message : " + message;
             }
-            else if(transferMode == true)
+            else if(transferMode == true) //transfer file
             {
                 data = audioSerializer.loadedAudio;
-                LogText.text = "sended your file : " + "test.wav";
+                LogText.text = "sended your file : " + message + ".wav";
             }
 
             stream.Write(data, 0, data.Length); 
         }
-        catch(SocketException e)
+        catch(Exception e)
         {
             Debug.Log("Socket error : " + e.Message);
             SocketExceptionText.text = e.Message;
             isActivate = false;
         }
-        catch(System.SystemException e)
-        {
-            Debug.Log("Format error : " + e.Message);
-            SocketExceptionText.text = e.Message;
-            isActivate = false;
-        }
-        
     }
 
     public void OnExit()
@@ -132,11 +119,40 @@ public class NetWorkClient : MonoBehaviour
         client.tcp.Close();
     }
 
+    public void OnConnectStart()
+    {
+        if(isActivate == true)
+        {
+            LogText.text = "Already connected";
+            return;
+        }
+        isActivate = true;
+        try
+        {
+            serverAddress = new IPEndPoint(IPAddress.Parse(inputAddress), 6321);
+            clientAddress = new IPEndPoint(IPAddress.Parse(localIP), 0);
+            clientSocket = new TcpClient(clientAddress);
+            client = new ServerClient(clientSocket);
+            client.tcp.Connect(serverAddress); 
+        }
+        catch(Exception e)
+        {
+            Debug.Log("Error : " + e.Message);
+            SocketExceptionText.text = e.Message;
+            isActivate = false;
+        }
+    }
+
     public void OnFeatureStart()
     {
+        if(isActivate == false)
+        {
+            LogText.text = "Please connect first";
+            return;
+        }
         if(transferMode == null)
         {
-            LogText.text = "please choose transfer mode";
+            LogText.text = "Please choose transfer mode";
             return;
         }
         else if(transferMode == false) //transfer message
@@ -154,15 +170,25 @@ public class NetWorkClient : MonoBehaviour
         inputAddress = inputAddressField.text;
         ((Text)inputAddressField.placeholder).text = "address set to " + inputAddress; 
         inputAddressField.text = "";
-        Debug.Log("End Called : " + inputAddress);
     }
 
     public void OnInputMessage()
     {
+        if(transferMode == null)
+        {
+            ((Text)inputMessageField.placeholder).text = "Please select transfer mode";
+            inputMessageField.text = "";
+            return;
+        }
+
         inputMessage = inputMessageField.text;
-        ((Text)inputMessageField.placeholder).text = "Message set to " + inputMessage; 
+
+        if(transferMode == false)
+            ((Text)inputMessageField.placeholder).text = "Message set to " + inputMessage; 
+        else if(transferMode == true)
+            ((Text)inputMessageField.placeholder).text = "Filename set to " + inputMessage + ".wav";
+
         inputMessageField.text = "";
-        Debug.Log("End Called : " + inputMessage);
     }
 
     public void EndConnect()
@@ -171,17 +197,11 @@ public class NetWorkClient : MonoBehaviour
         if(clientSocket != null)
             clientSocket.Close();
     }
-    public Toggle currentSelection
-    {
-        get
-        {
-            return togglegroup.ActiveToggles().FirstOrDefault();
-        }
-    }
+
     public void OnInputType()
     {
         
-        string id = currentSelection.name;
+        string id = togglegroup.ActiveToggles().FirstOrDefault().name;
         //Debug.Log(id);
         if(id == "File") 
             transferMode = true;

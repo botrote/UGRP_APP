@@ -111,7 +111,7 @@ public class NetworkHost : MonoBehaviour
                 }
                 */
 
-                byte[] data = new byte[2000000];
+                byte[] data = new byte[5000000];
                 byte[] modeBuffer = new byte[1];
                 NetworkStream s = c.tcp.GetStream();
 
@@ -127,10 +127,12 @@ public class NetworkHost : MonoBehaviour
                 
                 bool transferMode = Convert.ToBoolean(modeBuffer[0]);
                 string encoded = Encoding.Default.GetString(data);
+                
+                Debug.Log("I'm called ");
 
                 if(encoded != null)
                 {
-                    Debug.Log("transferMode" + transferMode.ToString());
+                    Debug.Log("transferMode: " + transferMode.ToString());
                     if(transferMode == true)
                     {
                         audioSerializer.StoreByteClip(data);

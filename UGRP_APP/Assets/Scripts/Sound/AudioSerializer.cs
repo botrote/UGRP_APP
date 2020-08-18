@@ -40,6 +40,12 @@ public class AudioSerializer : MonoBehaviour
 		}
         string path = Path.Combine(Application.persistentDataPath + "/data/", fileName);
 
+        if(File.Exists(path) == false)
+        {
+            Debug.Log("File " + path + " doesn't exist.");
+            yield break;
+        }
+
         WWW tempWWW = new WWW(@"file://" + path);
         
         Debug.Log(path);
@@ -70,6 +76,8 @@ public class AudioSerializer : MonoBehaviour
         Buffer.BlockCopy(b_fileName, 0, loadedAudio, 12, b_fileName.Length);
         Buffer.BlockCopy(soundData, 0, loadedAudio, 12+b_fileName.Length, loadedAudio.Length-12-b_fileName.Length);
 
+        Debug.Log(loadedAudio.Length);
+
         isLoading = false;
     }
 
@@ -90,17 +98,20 @@ public class AudioSerializer : MonoBehaviour
         int fileNameLength = BitConverter.ToInt32(b_fileNameLength, 0);
 
         byte[] b_fileName = new byte[fileNameLength];
-        float[] soundData = new float[(data.Length-12-fileNameLength) / 4];
+        float[] soundData = new float[((data.Length-12-fileNameLength) / 4) + 1];
 
         Buffer.BlockCopy(data, 12, b_fileName, 0, fileNameLength);
         string fileName = Encoding.UTF8.GetString(b_fileName);
+
         Buffer.BlockCopy(data, 12+fileNameLength, soundData, 0, data.Length-12-fileNameLength);
 
         AudioClip clip = AudioClip.Create(fileName, samples, channels, 44100, false);
         clip.SetData(soundData, 0);
+        Debug.Log(samples);
+        Debug.Log(channels);
+        Debug.Log(soundData.Length);
         audioSource.clip = clip;
 
-        fileName = "test" + fileName;
         SavWav.Save(fileName, clip);
         return clip;
     }
