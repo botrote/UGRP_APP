@@ -51,7 +51,10 @@ public class SceneLoader : MonoBehaviour
     {
         SceneManager.LoadScene("SampleScene3");
     }
-
+    public void startScene4()
+    {
+        SceneManager.LoadScene("SampleScene4");
+    }
     public void startSceneHost()
     {
         SceneManager.LoadScene("HostScene");
