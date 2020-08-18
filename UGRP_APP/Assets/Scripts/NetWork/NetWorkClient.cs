@@ -83,16 +83,8 @@ public class NetWorkClient : MonoBehaviour
 
     public void StartFeature()
     {
-        if(isActivate == true)
-            return;
-        isActivate = true;
         try
         {
-            serverAddress = new IPEndPoint(IPAddress.Parse(inputAddress), 6321);
-            clientAddress = new IPEndPoint(IPAddress.Parse(localIP), 0);
-            clientSocket = new TcpClient(clientAddress);
-            client = new ServerClient(clientSocket);
-            client.tcp.Connect(serverAddress);
             NetworkStream stream = client.tcp.GetStream();
             string message = inputMessage;
 
@@ -106,7 +98,7 @@ public class NetWorkClient : MonoBehaviour
                 data = Encoding.Default.GetBytes(message);
                 LogText.text = "sended your message : " + message;
             }
-            else if(transferMode == true)
+            else if(transferMode == true) //transfer file
             {
                 data = audioSerializer.loadedAudio;
                 LogText.text = "sended your file : " + message + ".wav";
@@ -114,19 +106,12 @@ public class NetWorkClient : MonoBehaviour
 
             stream.Write(data, 0, data.Length); 
         }
-        catch(SocketException e)
+        catch(Exception e)
         {
             Debug.Log("Socket error : " + e.Message);
             SocketExceptionText.text = e.Message;
             isActivate = false;
         }
-        catch(System.SystemException e)
-        {
-            Debug.Log("Format error : " + e.Message);
-            SocketExceptionText.text = e.Message;
-            isActivate = false;
-        }
-        
     }
 
     public void OnExit()
@@ -134,11 +119,40 @@ public class NetWorkClient : MonoBehaviour
         client.tcp.Close();
     }
 
+    public void OnConnectStart()
+    {
+        if(isActivate == true)
+        {
+            LogText.text = "Already connected";
+            return;
+        }
+        isActivate = true;
+        try
+        {
+            serverAddress = new IPEndPoint(IPAddress.Parse(inputAddress), 6321);
+            clientAddress = new IPEndPoint(IPAddress.Parse(localIP), 0);
+            clientSocket = new TcpClient(clientAddress);
+            client = new ServerClient(clientSocket);
+            client.tcp.Connect(serverAddress); 
+        }
+        catch(Exception e)
+        {
+            Debug.Log("Error : " + e.Message);
+            SocketExceptionText.text = e.Message;
+            isActivate = false;
+        }
+    }
+
     public void OnFeatureStart()
     {
+        if(isActivate == false)
+        {
+            LogText.text = "Please connect first";
+            return;
+        }
         if(transferMode == null)
         {
-            LogText.text = "please choose transfer mode";
+            LogText.text = "Please choose transfer mode";
             return;
         }
         else if(transferMode == false) //transfer message
