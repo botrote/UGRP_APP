@@ -64,7 +64,9 @@ public class NetworkHost : MonoBehaviour
 
         try
         {
-            server = new TcpListener(IPAddress.Parse(localIP), port);
+            IPEndPoint localAddress = new IPEndPoint(0, port);
+            server = new TcpListener(localAddress);
+            //server = new TcpListener(IPAddress.Parse(localIP), port);
             server.Start();
             StartListening();
             serverStarted = true;
@@ -77,10 +79,12 @@ public class NetworkHost : MonoBehaviour
             Debug.Log("Socket error : " + e.Message);
             SocketExceptionText.text = e.Message;
         }
+
     }
 
     private void Update()
     {
+        try {
         if(isActivate == false)
             return;
         //count++;
@@ -115,6 +119,7 @@ public class NetworkHost : MonoBehaviour
                 byte[] modeBuffer = new byte[1];
                 NetworkStream s = c.tcp.GetStream();
 
+                HostInfoText.text = "2";
                 if(s.DataAvailable)
                     s.Read(modeBuffer, 0, 1);
                 else
@@ -131,7 +136,8 @@ public class NetworkHost : MonoBehaviour
                 string encoded = Encoding.UTF8.GetString(data);
                 //string encoded = data.ToString();
                 
-                Debug.Log("I'm called ");
+                //Debug.Log("I'm called ");
+                 HostInfoText.text = "3";
 
                 if(encoded != null)
                 {
@@ -155,6 +161,10 @@ public class NetworkHost : MonoBehaviour
             }
 
             // check for message from the client
+        }
+        }
+        catch(Exception e){
+            SocketExceptionText.text = e.Message;
         }
     }
 

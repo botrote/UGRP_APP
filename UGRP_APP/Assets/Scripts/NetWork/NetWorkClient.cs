@@ -130,7 +130,7 @@ public class NetWorkClient : MonoBehaviour
         try
         {
             serverAddress = new IPEndPoint(IPAddress.Parse(inputAddress), 6321);
-            clientAddress = new IPEndPoint(IPAddress.Parse(localIP), 0);
+            clientAddress = new IPEndPoint(0, 0);
             clientSocket = new TcpClient(clientAddress);
             client = new ServerClient(clientSocket);
             client.tcp.Connect(serverAddress); 
