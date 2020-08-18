@@ -4,32 +4,14 @@ using System;
 using System.IO;
 using UnityEngine;
 using UnityEngine.UI; 
-public class TextManager : MonoBehaviour
+public static class TextManager
 { 
-    private InputField inputText;
-    private string text;
-    private string textName;
-    
-    // Start is called before the first frame update
-    void Start()
-    {
-        inputText = GameObject.Find("InputText").GetComponent<InputField>();
+    public static void TextWrite(string txt){
+        string fileName = System.DateTime.Now.ToString().Replace("-", "").Replace(":", "").Replace(" ", "").Replace("P", "").Replace("A", "").Replace("M", "_");
+        TextSave(fileName, txt);
 
     }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
-    public void TextWrite(){
-        text = inputText.text;
-        textName = System.DateTime.Now.ToString().Replace("-", "").Replace(":", "").Replace(" ", "").Replace("P", "").Replace("A", "").Replace("M", "_");
-        TextSave(textName, text);
-
-    }
-    public bool TextSave(string filename, string txt){
+    private static bool TextSave(string filename, string txt){
         if(!filename.ToLower().EndsWith(".txt")){
             filename += ".txt" ;
         }

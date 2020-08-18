@@ -121,12 +121,15 @@ public class NetworkHost : MonoBehaviour
                     return;
                 
                 if(s.DataAvailable)
+                
                     s.Read(data, 0, data.Length);
+                
                 else
                     return;
                 
                 bool transferMode = Convert.ToBoolean(modeBuffer[0]);
-                string encoded = Encoding.Default.GetString(data);
+                string encoded = Encoding.UTF8.GetString(data);
+                //string encoded = data.ToString();
                 
                 Debug.Log("I'm called ");
 
@@ -140,7 +143,12 @@ public class NetworkHost : MonoBehaviour
                     }
                     if(transferMode == false)
                     {
+                        encoded = encoded.TrimEnd(
+                            new char[] {(char)0 }
+                        );
+                        Debug.Log(encoded.Length);
                         onIncomingData(c, encoded);
+                        TextManager.TextWrite(encoded);
                     }
                 }
 
