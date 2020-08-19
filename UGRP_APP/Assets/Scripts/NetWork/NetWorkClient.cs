@@ -88,23 +88,25 @@ public class NetWorkClient : MonoBehaviour
             NetworkStream stream = client.tcp.GetStream();
             string message = inputMessage;
 
-            byte[] data = null;
+            byte[] dataBuffer = null;
             byte[] modeBuffer = new byte[1];
             modeBuffer[0] = Convert.ToByte(transferMode);
-            stream.Write(modeBuffer, 0, 1);
 
             if(transferMode == false) //transfer mesage
             {
-                data = Encoding.Default.GetBytes(message);
+                dataBuffer = Encoding.Default.GetBytes(message);
                 LogText.text = "sended your message : " + message;
             }
             else if(transferMode == true) //transfer file
             {
-                data = audioSerializer.loadedAudio;
+                dataBuffer = audioSerializer.loadedAudio;
                 LogText.text = "sended your file : " + message + ".wav";
             }
 
-            stream.Write(data, 0, data.Length); 
+            byte[] finalBuffer = new byte[dataBuffer.Length + 1];
+            Buffer.BlockCopy(modeBuffer, 0, finalBuffer, 0, 1);
+            Buffer.BlockCopy(dataBuffer, 0, finalBuffer, 1, dataBuffer.Length);
+            stream.Write(finalBuffer, 0, finalBuffer.Length); 
         }
         catch(Exception e)
         {
