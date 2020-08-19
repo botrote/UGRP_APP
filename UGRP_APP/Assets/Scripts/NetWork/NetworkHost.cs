@@ -17,6 +17,7 @@ public class NetworkHost : MonoBehaviour
     public Text MessageText;
     public Text ClientMessageText;
     public Text SocketExceptionText;
+    public Text FileMessageText;
     public Text HostInfoText;
 
     private List<ServerClient> clients;
@@ -37,6 +38,8 @@ public class NetworkHost : MonoBehaviour
         SocketExceptionText.text = "";
         HostInfoText = GameObject.Find("HostInfoText").GetComponent<Text>();
         HostInfoText.text = "";
+        FileMessageText = GameObject.Find("FileMessageText").GetComponent<Text>();
+        FileMessageText.text = "";
 
         isActivate = false;
         isHandlingFile = false;
@@ -73,7 +76,7 @@ public class NetworkHost : MonoBehaviour
             StartListening();
             serverStarted = true;
             Debug.Log("Server has been started on address " + server.LocalEndpoint.ToString());
-            HostInfoText.text = "Server has been started on address " + server.LocalEndpoint.ToString();
+            HostInfoText.text = "Server has been started on address " + localIP.ToString();
         }
         catch (Exception e)
         {
@@ -86,6 +89,7 @@ public class NetworkHost : MonoBehaviour
 
     private void Update()
     {
+        SetFileMessage();
         if(isActivate == false || isHandlingFile == true)
             return;
         MessageText.text = count + "clients";
@@ -114,6 +118,9 @@ public class NetworkHost : MonoBehaviour
 
     private IEnumerator HandlingFile(NetworkStream s)
     {
+        if(s.DataAvailable == false)
+            yield break;
+
         isHandlingFile = true;
         yield return new WaitForSeconds(1f);
         byte[] data = new byte[5000000];
@@ -160,6 +167,14 @@ public class NetworkHost : MonoBehaviour
             }
         }
         isHandlingFile = false;
+    }
+
+    private void SetFileMessage()
+    {
+        if(isHandlingFile)
+            FileMessageText.text = "File loading... please wait..";
+        else
+            FileMessageText.text = "";
     }
 
     private bool IsConnected(TcpClient c)
