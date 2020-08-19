@@ -10,7 +10,8 @@ using System.Collections.Generic;
 
 public class NetworkHost : MonoBehaviour
 {
-    public bool isActivate;
+    private bool isActivate;
+    private bool isHandlingFile;
     string localIP;
     public int port = 6321;
     public Text MessageText;
@@ -38,6 +39,7 @@ public class NetworkHost : MonoBehaviour
         HostInfoText.text = "";
 
         isActivate = false;
+        isHandlingFile = false;
         localIP = null;
         IPHostEntry host = Dns.GetHostEntry(Dns.GetHostName());
         foreach (IPAddress ip in host.AddressList)
@@ -84,10 +86,8 @@ public class NetworkHost : MonoBehaviour
 
     private void Update()
     {
-        try {
-        if(isActivate == false)
+        if(isActivate == false || isHandlingFile == true)
             return;
-        //count++;
         MessageText.text = count + "clients";
         if (!serverStarted)
             return;
@@ -104,68 +104,62 @@ public class NetworkHost : MonoBehaviour
             }
             else
             {
-                /*
                 NetworkStream s = c.tcp.GetStream();
-                if (s.DataAvailable)
-                {
-                    StreamReader reader = new StreamReader(s, true);
-                    String data = reader.ReadLine();
-                    if (data != null)
-                        onIncomingData(c, data);
-                }
-                */
-
-                byte[] data = new byte[5000000];
-                byte[] modeBuffer = new byte[1];
-                NetworkStream s = c.tcp.GetStream();
-
-                HostInfoText.text = "2";
-                if(s.DataAvailable)
-                    s.Read(modeBuffer, 0, 1);
-                else
-                    return;
-                
-                if(s.DataAvailable)
-                
-                    s.Read(data, 0, data.Length);
-                
-                else
-                    return;
-                
-                bool transferMode = Convert.ToBoolean(modeBuffer[0]);
-                string encoded = Encoding.UTF8.GetString(data);
-                //string encoded = data.ToString();
-                
-                //Debug.Log("I'm called ");
-                 HostInfoText.text = "3";
-
-                if(encoded != null)
-                {
-                    Debug.Log("transferMode: " + transferMode.ToString());
-                    if(transferMode == true)
-                    {
-                        audioSerializer.StoreByteClip(data);
-                        onIncomingData(c, "audio file recieved");
-                    }
-                    if(transferMode == false)
-                    {
-                        encoded = encoded.TrimEnd(
-                            new char[] {(char)0 }
-                        );
-                        Debug.Log(encoded.Length);
-                        onIncomingData(c, encoded);
-                        TextManager.TextWrite(encoded);
-                    }
-                }
-
+                StartCoroutine(HandlingFile(s));
             }
 
             // check for message from the client
         }
+    }
+
+    private IEnumerator HandlingFile(NetworkStream s)
+    {
+        isHandlingFile = true;
+        yield return new WaitForSeconds(1f);
+        byte[] data = new byte[5000000];
+        byte[] modeBuffer = new byte[1];
+
+        HostInfoText.text = "2";
+        if(s.DataAvailable)
+        {
+            s.Read(modeBuffer, 0, 1);
         }
-        catch(Exception e){
-            SocketExceptionText.text = e.Message;
+        else
+        {
+            isHandlingFile = false;
+            yield break;
         }
+            
+        if(s.DataAvailable)
+        {
+            s.Read(data, 0, data.Length);  
+        }        
+        else
+        {
+            isHandlingFile = false;
+            yield break;
+        }
+                
+        bool transferMode = Convert.ToBoolean(modeBuffer[0]);
+        string encoded = Encoding.UTF8.GetString(data);
+
+        if(encoded != null)
+        {
+            Debug.Log("transferMode: " + transferMode.ToString());
+            if(transferMode == true)
+            {
+                audioSerializer.StoreByteClip(data);
+                onIncomingData("audio file recieved");
+            }
+            if(transferMode == false)
+            {
+                encoded = encoded.TrimEnd(new char[] {(char)0});
+                Debug.Log(encoded.Length);
+                onIncomingData(encoded);
+                TextManager.TextWrite(encoded);
+            }
+        }
+        isHandlingFile = false;
     }
 
     private bool IsConnected(TcpClient c)
@@ -206,9 +200,9 @@ public class NetworkHost : MonoBehaviour
 
     }
 
-    private void onIncomingData(ServerClient c, string data)
+    private void onIncomingData(string data)
     {
-        Debug.Log(c.clientName + " has sent the following message : " + data);
+        Debug.Log("client has sent the following message : " + data);
         ClientMessageText.text = data;
     }
 
