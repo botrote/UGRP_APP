@@ -122,7 +122,7 @@ public class NetworkHost : MonoBehaviour
             yield break;
 
         isHandlingFile = true;
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(3f);
         byte[] data = new byte[5000000];
         byte[] modeBuffer = new byte[1];
 
