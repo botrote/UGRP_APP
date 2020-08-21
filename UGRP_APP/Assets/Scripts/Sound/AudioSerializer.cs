@@ -11,7 +11,6 @@ public class AudioSerializer : MonoBehaviour
 {
     public bool isLoading { get; private set; }
     public byte[] loadedAudio { get; private set; }
-    public AudioSource audioSource;
 
     void Start()
     {
@@ -110,7 +109,6 @@ public class AudioSerializer : MonoBehaviour
         Debug.Log(samples);
         Debug.Log(channels);
         Debug.Log(soundData.Length);
-        audioSource.clip = clip;
 
         SavWav.Save(fileName, clip);
         return clip;

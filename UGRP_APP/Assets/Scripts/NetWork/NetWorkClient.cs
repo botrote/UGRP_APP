@@ -1,13 +1,9 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using System.Net.Sockets;
 using System.Net;
 using System.Text;
-using System.IO;
-using UnityEngine.UI;
 using System;
-using System.Linq;
 
 public class NetWorkClient : MonoBehaviour
 {
@@ -17,39 +13,20 @@ public class NetWorkClient : MonoBehaviour
     private TcpClient clientSocket;
     private IPEndPoint clientAddress;
     private IPEndPoint serverAddress;
-    public Text SocketExceptionText;
-    private Text ClinetInfoText;
-    private Text LogText;
-    private InputField inputAddressField;
-    private InputField inputMessageField;
-    private string inputAddress;
-    private string inputMessage;
-    
-    public ToggleGroup togglegroup;
-    private bool? transferMode;
+    public string inputAddress { get; set; }
+    public string inputMessage { get; set; }
     public AudioSerializer audioSerializer;
+    public ClientUIManager clientUIManager;
 
     // Start is called before the first frame update
     void Start()
     {
-        togglegroup = GameObject.Find("Canvas").transform.Find("ToggleGroup").GetComponent<ToggleGroup>();
-
         isActivate = false;
         localIP = null;
-        transferMode = null;
         IPHostEntry host = Dns.GetHostEntry(Dns.GetHostName());
 
         inputAddress = "";
         inputMessage = "";
-
-        SocketExceptionText = GameObject.Find("SocketExceptionText").GetComponent<Text>();
-        ClinetInfoText = GameObject.Find("ClientInfoText").GetComponent<Text>();
-        LogText = GameObject.Find("LogText").GetComponent<Text>();
-        SocketExceptionText.text = "";
-        LogText.text = "";
-        ClinetInfoText.text = "";
-        inputAddressField = GameObject.Find("AddressInputField").GetComponent<InputField>();
-        inputMessageField = GameObject.Find("MessageInputField").GetComponent<InputField>();
 
         foreach (IPAddress ip in host.AddressList)
         {
@@ -60,7 +37,7 @@ public class NetWorkClient : MonoBehaviour
             }
         }
         Debug.Log("Client IP : " + localIP);
-        ClinetInfoText.text = "Client IP : " + localIP;
+        clientUIManager.ShowClientInfo("Client IP : " + localIP);
         KeyInputManager keyInputManager = GameObject.Find("KeyInputManager").GetComponent<KeyInputManager>();
         keyInputManager.EV_escape += EndConnect;
     }
@@ -73,11 +50,11 @@ public class NetWorkClient : MonoBehaviour
 
     public IEnumerator FileLoadCoroutine()
     {
-        LogText.text = "File is loading... please wait...";
+        clientUIManager.ShowClientInfo("File is loading... please wait...");
         StartCoroutine(audioSerializer.LoadAudioClipToByte(inputMessage));
         while(audioSerializer.isLoading == true)
             yield return null;
-        LogText.text = "File loading complete!";
+            clientUIManager.ShowClientInfo("File loading complete!");
         StartFeature();
     }
 
@@ -90,17 +67,17 @@ public class NetWorkClient : MonoBehaviour
 
             byte[] dataBuffer = null;
             byte[] modeBuffer = new byte[1];
-            modeBuffer[0] = Convert.ToByte(transferMode);
+            modeBuffer[0] = Convert.ToByte(clientUIManager.transferMode);
 
-            if(transferMode == false) //transfer mesage
+            if(clientUIManager.transferMode == false) //transfer mesage
             {
                 dataBuffer = Encoding.Default.GetBytes(message);
-                LogText.text = "sended your message : " + message;
+                clientUIManager.ShowLog("sended your message : " + message);
             }
-            else if(transferMode == true) //transfer file
+            else if(clientUIManager.transferMode == true) //transfer file
             {
                 dataBuffer = audioSerializer.loadedAudio;
-                LogText.text = "sended your file : " + message + ".wav";
+                clientUIManager.ShowLog("sended your file : " + message + ".wav");
             }
 
             byte[] finalBuffer = new byte[dataBuffer.Length + 1];
@@ -111,7 +88,7 @@ public class NetWorkClient : MonoBehaviour
         catch(Exception e)
         {
             Debug.Log("Socket error : " + e.Message);
-            SocketExceptionText.text = e.Message;
+            clientUIManager.ShowError(e.Message);
             isActivate = false;
         }
     }
@@ -125,7 +102,7 @@ public class NetWorkClient : MonoBehaviour
     {
         if(isActivate == true)
         {
-            LogText.text = "Already connected";
+            clientUIManager.ShowLog("Already connected");
             return;
         }
         isActivate = true;
@@ -140,7 +117,7 @@ public class NetWorkClient : MonoBehaviour
         catch(Exception e)
         {
             Debug.Log("Error : " + e.Message);
-            SocketExceptionText.text = e.Message;
+            clientUIManager.ShowError(e.Message);
             isActivate = false;
         }
     }
@@ -149,48 +126,22 @@ public class NetWorkClient : MonoBehaviour
     {
         if(isActivate == false)
         {
-            LogText.text = "Please connect first";
+            clientUIManager.ShowLog("Please connect first");
             return;
         }
-        if(transferMode == null)
+        if(clientUIManager.transferMode == null)
         {
-            LogText.text = "Please choose transfer mode";
+            clientUIManager.ShowLog("Please choose transfer mode");
             return;
         }
-        else if(transferMode == false) //transfer message
+        else if(clientUIManager.transferMode == false) //transfer message
         {
             StartFeature();
         }
-        else if(transferMode == true) //transfer file
+        else if(clientUIManager.transferMode == true) //transfer file
         {
             StartCoroutine(FileLoadCoroutine());
         }
-    }
-
-    public void OnInputAddress()
-    {
-        inputAddress = inputAddressField.text;
-        ((Text)inputAddressField.placeholder).text = "address set to " + inputAddress; 
-        inputAddressField.text = "";
-    }
-
-    public void OnInputMessage()
-    {
-        if(transferMode == null)
-        {
-            ((Text)inputMessageField.placeholder).text = "Please select transfer mode";
-            inputMessageField.text = "";
-            return;
-        }
-
-        inputMessage = inputMessageField.text;
-
-        if(transferMode == false)
-            ((Text)inputMessageField.placeholder).text = "Message set to " + inputMessage; 
-        else if(transferMode == true)
-            ((Text)inputMessageField.placeholder).text = "Filename set to " + inputMessage + ".wav";
-
-        inputMessageField.text = "";
     }
 
     public void EndConnect()
@@ -199,20 +150,5 @@ public class NetWorkClient : MonoBehaviour
         if(clientSocket != null)
             clientSocket.Close();
     }
-
-    public void OnInputType()
-    {
-        
-        string id = togglegroup.ActiveToggles().FirstOrDefault().name;
-        //Debug.Log(id);
-        if(id == "File") 
-            transferMode = true;
-        else if (id == "Text") 
-            transferMode = false;
-        else 
-            transferMode = null;
-        
-        //Debug.Log("currentSelection: " + inputType.ToString());
-    }    
 
 }

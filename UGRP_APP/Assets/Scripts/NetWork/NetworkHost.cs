@@ -14,33 +14,17 @@ public class NetworkHost : MonoBehaviour
     private bool isHandlingFile;
     string localIP;
     public int port = 6321;
-    public Text MessageText;
-    public Text ClientMessageText;
-    public Text SocketExceptionText;
-    public Text FileMessageText;
-    public Text HostInfoText;
-
     private List<ServerClient> clients;
     private List<ServerClient> disconnectList;
     private TcpListener server;
     private bool serverStarted;
     private int count = 0;
     public AudioSerializer audioSerializer;
+    public HostUIManager HostUIManager;
 
 
     private void Start()
     {
-        MessageText = GameObject.Find("NetworkStatusText").GetComponent<Text>();
-        MessageText.text = "";
-        ClientMessageText = GameObject.Find("ClientMessageText").GetComponent<Text>();
-        ClientMessageText.text = "";
-        SocketExceptionText = GameObject.Find("SocketExceptionText").GetComponent<Text>();
-        SocketExceptionText.text = "";
-        HostInfoText = GameObject.Find("HostInfoText").GetComponent<Text>();
-        HostInfoText.text = "";
-        FileMessageText = GameObject.Find("FileMessageText").GetComponent<Text>();
-        FileMessageText.text = "";
-
         isActivate = false;
         isHandlingFile = false;
         localIP = null;
@@ -76,15 +60,14 @@ public class NetworkHost : MonoBehaviour
             StartListening();
             serverStarted = true;
             Debug.Log("Server has been started on address " + server.LocalEndpoint.ToString());
-            HostInfoText.text = "Server has been started on address " + localIP.ToString();
+            HostUIManager.ShowHostInfo("Server has been started on address " + localIP.ToString());
         }
         catch (Exception e)
         {
             isActivate = false;
             Debug.Log("Socket error : " + e.Message);
-            SocketExceptionText.text = e.Message;
+            HostUIManager.ShowError(e.Message);
         }
-
     }
 
     private void Update()
@@ -92,12 +75,11 @@ public class NetworkHost : MonoBehaviour
         SetFileMessage();
         if(isActivate == false || isHandlingFile == true)
             return;
-        MessageText.text = count + "clients";
+        HostUIManager.ShowStatus(count + "clients");
         if (!serverStarted)
             return;
         foreach (ServerClient c in clients)
         {
-            // Is the client still conncted?
             if (!IsConnected(c.tcp))
             {
                 c.tcp.Close();
@@ -111,8 +93,6 @@ public class NetworkHost : MonoBehaviour
                 NetworkStream s = c.tcp.GetStream();
                 StartCoroutine(HandlingFile(s));
             }
-
-            // check for message from the client
         }
     }
 
@@ -122,11 +102,10 @@ public class NetworkHost : MonoBehaviour
             yield break;
 
         isHandlingFile = true;
-        yield return new WaitForSeconds(3f);
+        yield return new WaitForSeconds(1.5f);
         byte[] data = new byte[5000000];
         byte[] modeBuffer = new byte[1];
 
-        HostInfoText.text = "2";
         if(s.DataAvailable)
         {
             s.Read(modeBuffer, 0, 1);
@@ -172,9 +151,9 @@ public class NetworkHost : MonoBehaviour
     private void SetFileMessage()
     {
         if(isHandlingFile)
-            FileMessageText.text = "File loading... please wait..";
+            HostUIManager.ShowFileStatus("File loading... please wait..");
         else
-            FileMessageText.text = "";
+            HostUIManager.ShowFileStatus("");
     }
 
     private bool IsConnected(TcpClient c)
@@ -212,13 +191,12 @@ public class NetworkHost : MonoBehaviour
 
         //* Send a message to everyone, say someone has connected
         //Broadcast(clients[clients.Count - 1].clientName + "has connectred", clients);
-
     }
 
     private void onIncomingData(string data)
     {
         Debug.Log("client has sent the following message : " + data);
-        ClientMessageText.text = data;
+        HostUIManager.ShowClientMessage(data);
     }
 
     private void Broadcast(string data, List<ServerClient> cl)
