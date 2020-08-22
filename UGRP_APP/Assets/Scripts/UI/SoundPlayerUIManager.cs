@@ -3,14 +3,14 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class Input_SoundSelect : MonoBehaviour
+public class SoundPlayerUIManager : UIManager
 {
     // Start is called before the first frame update
     private InputField input_clipname;
-    SoundPlayerManager sManager;
+    private SoundPlayerManager sManager;
     void Start()
     {
-        input_clipname = gameObject.GetComponent<InputField>();
+        input_clipname = GameObject.Find("InputField").GetComponent<InputField>();
         sManager = GameObject.Find("AudioPlayManager").GetComponent<SoundPlayerManager>();
     }
 
