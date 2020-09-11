@@ -2277,7 +2277,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 248744413}
-        m_MethodName: OnStartServer
+        m_MethodName: OpenServer
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -2646,7 +2646,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 248744413}
-        m_MethodName: OnStopClient
+        m_MethodName: ConnectClientToServer
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -3624,7 +3624,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 248744413}
-        m_MethodName: OnStartHost
+        m_MethodName: OpenHost
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -3845,7 +3845,7 @@ MonoBehaviour:
   m_OnEndEdit:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 248744413}
         m_MethodName: OnInputAddress
         m_Mode: 1
         m_Arguments:
