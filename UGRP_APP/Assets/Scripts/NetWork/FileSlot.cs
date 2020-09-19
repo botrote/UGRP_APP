@@ -45,6 +45,26 @@ public class FileSlot : NetworkBehaviour
         DecodeTextFile();
     }
 
+    [ClientRpc]
+    public void RpcUploadTxt(byte[] data)
+    {
+        Debug.Log("rpc text called");
+        txtFileData = data;
+        DecodeTextFile();
+    }
+
+    [ClientRpc]
+    public void RpcUploadWavPacket(WavPacket packet)
+    {
+        packetNum = packet.maxPacketNum;
+        if(wavFileData == null || wavFileData.Length != 1024 * packetNum)
+            wavFileData = new byte[1024 * packetNum];
+        Buffer.BlockCopy(packet.data, 0, wavFileData, 1024 * packet.thisPacketNum, 1024);
+        Debug.Log("packet number " + packet.thisPacketNum + " saved");
+        if(packet.thisPacketNum == packet.maxPacketNum - 1)
+            DecodeWavFile();
+    }
+
     [Command]
     public void CmdUploadWavPacket(WavPacket packet)
     {
@@ -57,7 +77,7 @@ public class FileSlot : NetworkBehaviour
             DecodeWavFile();
     }
 
-    public IEnumerator UploadWavCoroutine()
+    public IEnumerator UploadWavCoroutine(bool isToHost)
     {
         for(int i = 0; i < packetNum; i++)
         {
@@ -68,7 +88,10 @@ public class FileSlot : NetworkBehaviour
             tempPacket.data = new byte[1024];
             Buffer.BlockCopy(wavFileData, 1024 * i, tempPacket.data, 0, 1024);
             Debug.Log("packet number " + i + " finished");
-            CmdUploadWavPacket(tempPacket);
+            if(isToHost)
+                CmdUploadWavPacket(tempPacket);
+            else
+                RpcUploadWavPacket(tempPacket);
             yield return null;
         }
     }
