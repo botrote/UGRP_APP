@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.Networking;
 using System;
 using System.Text;
+using System.IO;
 
 public class FileSlot : NetworkBehaviour
 {
@@ -106,7 +107,7 @@ public class FileSlot : NetworkBehaviour
         StartCoroutine(WavEncodingCoroutine(fileName));
     }
 
-    IEnumerator WavEncodingCoroutine(string fileName)
+    public IEnumerator WavEncodingCoroutine(string fileName)
     {
         StartCoroutine(audioSerializer.LoadAudioClipToByte(fileName));
         while(audioSerializer.isLoading == true)
@@ -123,13 +124,16 @@ public class FileSlot : NetworkBehaviour
     {
         Debug.Log("decode text called");
         string encoded = Encoding.UTF8.GetString(txtFileData);
+        GameObject.Find("SendRoutineManager").GetComponent<SendRoutineManager>().OnTextRecieved(this, encoded);
         TextManager.TextWrite(encoded);
     }
 
     void DecodeWavFile()
     {
         Debug.Log("decode wav called");
-        audioSerializer.StoreByteClip(wavFileData);
+        GameObject.Find("AudioSource").GetComponent<AudioSource>().clip = audioSerializer.StoreByteClip(wavFileData);
+        File.Delete(Path.Combine(Application.persistentDataPath + "/data/", "result.wav"));
+        GameObject.Find("Canvas").GetComponent<SentTxtSceneUIManager>().SetLoadingImageEnabled(false);
     }
 
 }
