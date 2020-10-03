@@ -9,10 +9,13 @@ public class UNetUIManager : NetworkManager
     
     void Start()
     {
-        inputAddressField = GameObject.Find("AddressInputField").GetComponent<InputField>();
-        StatusText = GameObject.Find("StatusText").GetComponent<Text>();
-        StatusText.text = "";
+        // inputAddressField = GameObject.Find("AddressInputField").GetComponent<InputField>();
+        // StatusText = GameObject.Find("StatusText").GetComponent<Text>();
+        // StatusText.text = "";
 
+        networkAddress = "192.168.219.117";
+        // OpenServer();
+        ConnectClientToServer();
     }
 
     public void OnInputAddress()
@@ -54,7 +57,7 @@ public class UNetUIManager : NetworkManager
         base.OnServerConnect(conn);
         
         Debug.Log("[Client]Connect Server Sucess.");
-        StatusText.text = "[Client]Connect Server Sucess.";
+        StatusText.text = "[Client]Connect Server Success.";
     }
 
 

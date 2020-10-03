@@ -34,7 +34,7 @@ public class SceneLoader : MonoBehaviour
     }
     public void startScene0()
     {
-        SceneManager.LoadScene("SampleScene0");
+        SceneManager.LoadScene("SampleScene2");
     }
 
     public void startScene1()

@@ -5,18 +5,11 @@ using UnityEngine.UI;
 
 public class UIManager : MonoBehaviour
 {
-    private Text platformText;
     void Awake()
     {
-        platformText = gameObject.transform.Find("PlatformText").GetComponent<Text>();
-        if(Application.platform == RuntimePlatform.Android)
-            platformText.text = "running on Android..";
-        else if(Application.platform == RuntimePlatform.WindowsPlayer)
-            platformText.text = "running on Windows..";
-        else
-            platformText.text = "running on Unknown platform..";
-
-        int count = -3;
+        Screen.SetResolution(1080, 1920, true);
+        //int count = -3;
+        /*
         if(Application.platform == RuntimePlatform.Android)
         {
             foreach(Transform child in transform)
@@ -32,8 +25,9 @@ public class UIManager : MonoBehaviour
                 Debug.Log(child.name);
             }
             count = 4;
-            platformText.gameObject.GetComponent<RectTransform>().anchoredPosition += new Vector2(0, (-100 * count));
         }
+        */
+
     }
     // Start is called before the first frame update
     void Start()

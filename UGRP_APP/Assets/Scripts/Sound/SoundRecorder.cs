@@ -59,6 +59,8 @@ public class SoundRecorder : MonoBehaviour
         audio.clip.name = clipName;
         StatusText.enabled = true;
         StatusText.text = "Recording finished";
+
+        RecordSave();
     }
 
     public void RecordPlay()
