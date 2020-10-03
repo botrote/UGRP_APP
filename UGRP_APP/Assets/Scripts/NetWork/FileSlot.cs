@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.Networking;
 using System;
 using System.Text;
+using System.IO;
 
 public class FileSlot : NetworkBehaviour
 {
@@ -45,6 +46,26 @@ public class FileSlot : NetworkBehaviour
         DecodeTextFile();
     }
 
+    [ClientRpc]
+    public void RpcUploadTxt(byte[] data)
+    {
+        Debug.Log("rpc text called");
+        txtFileData = data;
+        DecodeTextFile();
+    }
+
+    [ClientRpc]
+    public void RpcUploadWavPacket(WavPacket packet)
+    {
+        packetNum = packet.maxPacketNum;
+        if(wavFileData == null || wavFileData.Length != 1024 * packetNum)
+            wavFileData = new byte[1024 * packetNum];
+        Buffer.BlockCopy(packet.data, 0, wavFileData, 1024 * packet.thisPacketNum, 1024);
+        Debug.Log("packet number " + packet.thisPacketNum + " saved");
+        if(packet.thisPacketNum == packet.maxPacketNum - 1)
+            DecodeWavFile();
+    }
+
     [Command]
     public void CmdUploadWavPacket(WavPacket packet)
     {
@@ -57,7 +78,7 @@ public class FileSlot : NetworkBehaviour
             DecodeWavFile();
     }
 
-    public IEnumerator UploadWavCoroutine()
+    public IEnumerator UploadWavCoroutine(bool isToHost)
     {
         for(int i = 0; i < packetNum; i++)
         {
@@ -68,7 +89,10 @@ public class FileSlot : NetworkBehaviour
             tempPacket.data = new byte[1024];
             Buffer.BlockCopy(wavFileData, 1024 * i, tempPacket.data, 0, 1024);
             Debug.Log("packet number " + i + " finished");
-            CmdUploadWavPacket(tempPacket);
+            if(isToHost)
+                CmdUploadWavPacket(tempPacket);
+            else
+                RpcUploadWavPacket(tempPacket);
             yield return null;
         }
     }
@@ -83,7 +107,7 @@ public class FileSlot : NetworkBehaviour
         StartCoroutine(WavEncodingCoroutine(fileName));
     }
 
-    IEnumerator WavEncodingCoroutine(string fileName)
+    public IEnumerator WavEncodingCoroutine(string fileName)
     {
         StartCoroutine(audioSerializer.LoadAudioClipToByte(fileName));
         while(audioSerializer.isLoading == true)
@@ -100,13 +124,16 @@ public class FileSlot : NetworkBehaviour
     {
         Debug.Log("decode text called");
         string encoded = Encoding.UTF8.GetString(txtFileData);
+        GameObject.Find("SendRoutineManager").GetComponent<SendRoutineManager>().OnTextRecieved(this, encoded);
         TextManager.TextWrite(encoded);
     }
 
     void DecodeWavFile()
     {
         Debug.Log("decode wav called");
-        audioSerializer.StoreByteClip(wavFileData);
+        GameObject.Find("AudioSource").GetComponent<AudioSource>().clip = audioSerializer.StoreByteClip(wavFileData);
+        File.Delete(Path.Combine(Application.persistentDataPath + "/data/", "result.wav"));
+        GameObject.Find("Canvas").GetComponent<SentTxtSceneUIManager>().SetLoadingImageEnabled(false);
     }
 
 }

@@ -72,7 +72,7 @@ public class NetworkUIManager : UIManager
         //Debug.Log("currentSelection: " + inputType.ToString());
     }   
 
-    public void OnSend()
+    public void OnSendToHost()
     {
         if(fileSlot == null)
             fileSlot = GameObject.Find("FileSlot(Clone)").GetComponent<FileSlot>();
@@ -80,7 +80,18 @@ public class NetworkUIManager : UIManager
         if(fileType == FileType.Text)
             fileSlot.CmdUploadTxt(fileSlot.txtFileData);
         else if(fileType == FileType.Wav)    
-            StartCoroutine(fileSlot.UploadWavCoroutine());
+            StartCoroutine(fileSlot.UploadWavCoroutine(true));
+    }
+
+    public void OnSendToClient()
+    {
+        if(fileSlot == null)
+            fileSlot = GameObject.Find("FileSlot(Clone)").GetComponent<FileSlot>();
+
+        if(fileType == FileType.Text)
+            fileSlot.RpcUploadTxt(fileSlot.txtFileData);
+        else if(fileType == FileType.Wav)    
+            StartCoroutine(fileSlot.UploadWavCoroutine(false));
     }
 
     public void OnEnroll()
