@@ -6,14 +6,14 @@ public class UNetUIManager : NetworkManager
 {
     private InputField inputAddressField;
     private Text StatusText;
-    
+    private FileSlot fileSlot;
+    SoundRecorder s;
+
     void Start()
     {
-        // inputAddressField = GameObject.Find("AddressInputField").GetComponent<InputField>();
-        // StatusText = GameObject.Find("StatusText").GetComponent<Text>();
-        // StatusText.text = "";
-
+        fileSlot = null;
         networkAddress = "192.168.219.117";
+        s = GameObject.Find("RecordManager").GetComponent<SoundRecorder>();
         // OpenServer();
         ConnectClientToServer();
     }
@@ -47,10 +47,10 @@ public class UNetUIManager : NetworkManager
         StartClient();
     }
     public override void OnStartClient(NetworkClient client)
-{
-    base.OnStartClient(client);
-    Debug.Log("[Client]Start Client");
-}
+    {
+        base.OnStartClient(client);
+        Debug.Log("[Client]Start Client");
+    }
 
     public override void OnServerConnect(NetworkConnection conn)
     {
@@ -59,6 +59,16 @@ public class UNetUIManager : NetworkManager
         Debug.Log("[Client]Connect Server Sucess.");
         StatusText.text = "[Client]Connect Server Success.";
     }
-
-
+    public void OnEndRecord()
+    {
+        if(fileSlot == null)
+            fileSlot = GameObject.Find("FileSlot(Clone)").GetComponent<FileSlot>();
+        fileSlot.EncodeWavFile(s.clipName);
+    }
+    public void OnSendToHost()
+    {
+        if(fileSlot == null)
+            fileSlot = GameObject.Find("FileSlot(Clone)").GetComponent<FileSlot>();
+        StartCoroutine(fileSlot.UploadWavCoroutine(true));
+    }
 }

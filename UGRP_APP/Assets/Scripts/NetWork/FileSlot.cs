@@ -16,7 +16,6 @@ public class FileSlot : NetworkBehaviour
         public byte[] data; 
     }
 
-    bool isSendingWav;
     int packetNum;
     private AudioSerializer audioSerializer;
     public byte[] txtFileData;
@@ -28,7 +27,6 @@ public class FileSlot : NetworkBehaviour
         packetNum = -1;
         txtFileData = null;
         wavFileData = null;
-        isSendingWav = false;
         audioSerializer = GameObject.Find("AudioSerializer").GetComponent<AudioSerializer>();
     }
 
@@ -70,16 +68,19 @@ public class FileSlot : NetworkBehaviour
     public void CmdUploadWavPacket(WavPacket packet)
     {
         packetNum = packet.maxPacketNum;
+        Debug.Log("2");
         if(wavFileData == null || wavFileData.Length != 1024 * packetNum)
             wavFileData = new byte[1024 * packetNum];
         Buffer.BlockCopy(packet.data, 0, wavFileData, 1024 * packet.thisPacketNum, 1024);
         Debug.Log("packet number " + packet.thisPacketNum + " saved");
+        Debug.Log("3");
         if(packet.thisPacketNum == packet.maxPacketNum - 1)
-            DecodeWavFile();
+            DecodeWavFile2();
     }
 
     public IEnumerator UploadWavCoroutine(bool isToHost)
     {
+        Debug.Log(isToHost);
         for(int i = 0; i < packetNum; i++)
         {
             WavPacket tempPacket;
@@ -89,8 +90,10 @@ public class FileSlot : NetworkBehaviour
             tempPacket.data = new byte[1024];
             Buffer.BlockCopy(wavFileData, 1024 * i, tempPacket.data, 0, 1024);
             Debug.Log("packet number " + i + " finished");
-            if(isToHost)
+            if(isToHost){
+                Debug.Log("Hello");
                 CmdUploadWavPacket(tempPacket);
+            }
             else
                 RpcUploadWavPacket(tempPacket);
             yield return null;
@@ -135,5 +138,10 @@ public class FileSlot : NetworkBehaviour
         File.Delete(Path.Combine(Application.persistentDataPath + "/data/", "result.wav"));
         GameObject.Find("Canvas").GetComponent<SentTxtSceneUIManager>().SetLoadingImageEnabled(false);
     }
-
+    void DecodeWavFile2()
+    {
+        Debug.Log("decode wav called");
+        //GameObject.Find("AudioSource").GetComponent<AudioSource>().clip = audioSerializer.StoreByteClip(wavFileData);
+        File.Delete(Path.Combine(Application.persistentDataPath + "/data/", "result.wav"));
+    }
 }
