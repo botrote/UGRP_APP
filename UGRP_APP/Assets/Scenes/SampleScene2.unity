@@ -241,7 +241,7 @@ MonoBehaviour:
   m_ServerBindToIP: 0
   m_ServerBindAddress: 
   m_NetworkAddress: localhost
-  m_DontDestroyOnLoad: 1
+  m_DontDestroyOnLoad: 0
   m_RunInBackground: 1
   m_ScriptCRCCheck: 1
   m_MaxDelay: 0.01
@@ -648,7 +648,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1015223712}
-        m_MethodName: startScene0
+        m_MethodName: startSceneN
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

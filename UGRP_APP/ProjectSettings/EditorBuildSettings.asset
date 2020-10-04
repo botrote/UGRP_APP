@@ -8,15 +8,18 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/startScene.unity
     guid: 2cda990e2423bbf4892e6590ba056729
+  - enabled: 1
+    path: Assets/Scenes/SampleScene2.unity
+    guid: 75db4e98f6577ae47bff88dfedaba909
+  - enabled: 1
+    path: Assets/Scenes/SendTxtScene.unity
+    guid: 28ed3a91400de2a45a41be1df27fa53c
   - enabled: 0
     path: Assets/Scenes/SampleScene0.unity
     guid: 8a10480dcd667c54b87d879a4a0e2f00
   - enabled: 0
     path: Assets/Scenes/SampleScene1.unity
     guid: 2a8717c9b9627ad4eac5f0c1a00f3b6e
-  - enabled: 1
-    path: Assets/Scenes/SampleScene2.unity
-    guid: 75db4e98f6577ae47bff88dfedaba909
   - enabled: 0
     path: Assets/Scenes/SampleScene3.unity
     guid: ce6ef693adbd2cc459f141cb11605ea7

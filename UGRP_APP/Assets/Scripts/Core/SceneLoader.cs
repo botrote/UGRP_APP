@@ -65,6 +65,11 @@ public class SceneLoader : MonoBehaviour
         SceneManager.LoadScene("ClientScene");
     }
 
+    public void startSceneSendTxt()
+    {
+        SceneManager.LoadScene("SendTxtScene");
+    }
+
     public void quitApp()
     {
         Application.Quit();

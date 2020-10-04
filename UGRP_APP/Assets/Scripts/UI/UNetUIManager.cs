@@ -12,7 +12,7 @@ public class UNetUIManager : NetworkManager
     void Start()
     {
         fileSlot = null;
-        networkAddress = "192.168.219.117";
+        networkAddress = "172.30.1.6";
         s = GameObject.Find("RecordManager").GetComponent<SoundRecorder>();
         // OpenServer();
         ConnectClientToServer();
