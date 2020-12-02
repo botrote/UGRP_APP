@@ -141,7 +141,8 @@ public class FileSlot : NetworkBehaviour
     void DecodeWavFile2()
     {
         Debug.Log("decode wav called");
-        //GameObject.Find("AudioSource").GetComponent<AudioSource>().clip = audioSerializer.StoreByteClip(wavFileData);
-        File.Delete(Path.Combine(Application.persistentDataPath + "/data/", "result.wav"));
+        //GameObject.Find("AudioSource").GetComponent<AudioSource>().clip = 
+        audioSerializer.StoreByteClip(wavFileData);
+        //File.Delete(Path.Combine(Application.persistentDataPath + "/data/", "result.wav"));
     }
 }

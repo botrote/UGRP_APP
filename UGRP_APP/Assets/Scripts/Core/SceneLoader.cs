@@ -34,7 +34,7 @@ public class SceneLoader : MonoBehaviour
     }
     public void startScene0()
     {
-        SceneManager.LoadScene("SampleScene2");
+        SceneManager.LoadScene("ScriptScene");
     }
 
     public void startScene1()

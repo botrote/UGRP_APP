@@ -12,7 +12,7 @@ public class UNetUIManager : NetworkManager
     void Start()
     {
         fileSlot = null;
-        networkAddress = "172.30.1.6";
+        networkAddress = "192.168.219.118";
         s = GameObject.Find("RecordManager").GetComponent<SoundRecorder>();
         // OpenServer();
         ConnectClientToServer();
@@ -69,6 +69,8 @@ public class UNetUIManager : NetworkManager
     {
         if(fileSlot == null)
             fileSlot = GameObject.Find("FileSlot(Clone)").GetComponent<FileSlot>();
+        Debug.Log("[Client]OnSendToHost.");
         StartCoroutine(fileSlot.UploadWavCoroutine(true));
+        Debug.Log("[Client]OnSendToHost Finished.");
     }
 }
