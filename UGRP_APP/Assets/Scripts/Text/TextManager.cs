@@ -11,7 +11,7 @@ public static class TextManager
         TextSave(fileName, txt);
 
     }
-    private static bool TextSave(string filename, string txt){
+    public static bool TextSave(string filename, string txt){
         if(!filename.ToLower().EndsWith(".txt")){
             filename += ".txt" ;
         }

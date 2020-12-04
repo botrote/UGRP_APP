@@ -44,6 +44,12 @@ public class FileSlot : NetworkBehaviour
         DecodeTextFile();
     }
 
+    [Command]
+    public void CmdRate(int rating)
+    {
+        TextManager.TextSave("rate", rating.ToString());
+    }
+
     [ClientRpc]
     public void RpcUploadTxt(byte[] data)
     {
