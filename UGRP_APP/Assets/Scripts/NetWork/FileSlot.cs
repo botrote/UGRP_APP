@@ -91,7 +91,7 @@ public class FileSlot : NetworkBehaviour
         {
             WavPacket tempPacket;
             tempPacket.maxPacketNum = packetNum;
-            tempPacket.thisPacketNum = i;
+            tempPacket.thisPacketNum = i; 
             tempPacket.packetSize = 1024;
             tempPacket.data = new byte[1024];
             Buffer.BlockCopy(wavFileData, 1024 * i, tempPacket.data, 0, 1024);
@@ -150,7 +150,7 @@ public class FileSlot : NetworkBehaviour
     void DecodeWavFile()
     {
         Debug.Log("decode wav called");
-        GameObject.Find("AudioSource").GetComponent<AudioSource>().clip = audioSerializer.StoreByteClip(wavFileData);
+        GameObject.Find("AudioSource").GetComponent<AudioSource>().clip = audioSerializer.StoreByteClip(wavFileData, 1);
         //File.Delete(Path.Combine(Application.persistentDataPath + "/data/", "result.wav"));
         GameObject.Find("Canvas").GetComponent<SentTxtSceneUIManager>().SetLoadingImageEnabled(false);
     }
@@ -158,7 +158,7 @@ public class FileSlot : NetworkBehaviour
     {
         Debug.Log("decode wav called");
         //GameObject.Find("AudioSource").GetComponent<AudioSource>().clip = 
-        audioSerializer.StoreByteClip(wavFileData);
+        audioSerializer.StoreByteClip(wavFileData, 2);
         //File.Delete(Path.Combine(Application.persistentDataPath + "/data/", "result.wav"));
     }
 }

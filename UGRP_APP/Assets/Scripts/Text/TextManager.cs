@@ -27,6 +27,7 @@ public static class TextManager
 
     }
     public static string get_CmdfileName(){
+        Debug.Log("get file name:"+CmdfileName);
         return CmdfileName;
     }
 

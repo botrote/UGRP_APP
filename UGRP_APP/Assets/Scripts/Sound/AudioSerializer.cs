@@ -27,7 +27,7 @@ public class AudioSerializer : MonoBehaviour
     {
         yield return StartCoroutine(LoadAudioClipToByte("test"));
         yield return new WaitForSeconds(5);
-        StoreByteClip(loadedAudio);
+       // StoreByteClip(loadedAudio);
     }
 
     public IEnumerator LoadAudioClipToByte(string fileName)
@@ -81,7 +81,7 @@ public class AudioSerializer : MonoBehaviour
         isLoading = false;
     }
 
-    public AudioClip StoreByteClip(byte[] data)
+    public AudioClip StoreByteClip(byte[] data, int i)
     {
       //  Debug.Log(data.Length);
         byte[] b_samples = new byte[4];
@@ -110,8 +110,8 @@ public class AudioSerializer : MonoBehaviour
         Debug.Log(samples);
         Debug.Log(channels);
         Debug.Log(soundData.Length);
-        //폴더
-        SavWav.Save(fileName, clip, "C:/Users/최수아/Documents"+"/UGRP/data/");
+        //script 저장 폴더
+        if(i==2) SavWav.Save(fileName, clip, "C:/Users/최수아/Documents"+"/UGRP/data/");
         return clip;
     }
 }

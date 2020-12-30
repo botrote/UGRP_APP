@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using System.IO;
 
 public class SentTxtSceneUIManager : MonoBehaviour
 {
@@ -54,9 +55,13 @@ public class SentTxtSceneUIManager : MonoBehaviour
 
     public void OnSaveButton()
     {
-        string clipName =TextManager.get_CmdfileName();
+        string clipName =clipName = System.DateTime.Now.ToString().Replace("-", "").Replace(":", "").Replace(" ", "").Replace("P", "").Replace("A", "").Replace("M", "_");
+        string filepath = Application.persistentDataPath + "/data/";
+        Debug.Log(clipName);
         //wav폴더
-        SavWav.Save(clipName, audioSource.clip,  "C:/Users/최수아/Documents"+"/UGRP/sync_system/computer/download/" );
+        //SavWav.Save(clipName, audioSource.clip,  "C:/Users/최수아/Documents"+"/UGRP/sync_system/computer/download/" );
+        SavWav.Save(clipName, audioSource.clip, filepath);
+       
     }
 
     public void OnRateButton()

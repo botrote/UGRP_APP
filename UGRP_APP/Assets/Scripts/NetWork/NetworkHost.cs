@@ -134,7 +134,7 @@ public class NetworkHost : MonoBehaviour
             Debug.Log("transferMode: " + transferMode.ToString());
             if(transferMode == true)
             {
-                audioSerializer.StoreByteClip(data);
+//                audioSerializer.StoreByteClip(data);
                 onIncomingData("audio file recieved");
             }
             if(transferMode == false)
