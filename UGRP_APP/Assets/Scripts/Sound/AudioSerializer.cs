@@ -110,8 +110,8 @@ public class AudioSerializer : MonoBehaviour
         Debug.Log(samples);
         Debug.Log(channels);
         Debug.Log(soundData.Length);
-
-        SavWav.Save(fileName, clip, Application.persistentDataPath + "/data/");
+        //폴더
+        SavWav.Save(fileName, clip, "C:/Users/최수아/Documents"+"/UGRP/data/");
         return clip;
     }
 }
