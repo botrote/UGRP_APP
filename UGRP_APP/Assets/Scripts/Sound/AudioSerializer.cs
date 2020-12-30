@@ -37,7 +37,8 @@ public class AudioSerializer : MonoBehaviour
         {
 			fileName += ".wav";
 		}
-        string path = Path.Combine(Application.persistentDataPath + "/wav/", fileName);
+        //wav폴더
+        string path = Path.Combine( "C:/Users/최수아/Documents"+"/UGRP/sync_system/computer/download/", fileName);
 
         if(File.Exists(path) == false)
         {

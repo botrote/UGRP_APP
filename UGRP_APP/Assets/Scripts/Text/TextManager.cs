@@ -18,11 +18,11 @@ public static class TextManager
         if(num == 1){  //user가 보내는 텍스트
             //CmdfileName = System.DateTime.Now.ToString().Replace("-", "").Replace(":", "").Replace(" ", "").Replace("P", "").Replace("A", "").Replace("M", "_");
             CmdfileName = date;
-            //TextSave(CmdfileName, txt, Application.persistentDataPath + "/text/");
-            TextSave(CmdfileName, txt, Application.persistentDataPath+ "/text/");
+            //text 폴더
+            TextSave(CmdfileName, txt, "C:/Users/최수아/Documents"+ "/UGRP/sync_system/computer/upload/");
         }   
-        else if(num == 2){ //rating
-            TextSave(CmdfileName, txt, Application.persistentDataPath+ "/feedback/");
+        else if(num == 2){ //feedback폴더
+            TextSave(CmdfileName, txt, "C:/Users/최수아/Documents"+ "/UGRP/feedback_system/computer/upload/");
         }      
 
     }

@@ -55,8 +55,8 @@ public class SentTxtSceneUIManager : MonoBehaviour
     public void OnSaveButton()
     {
         string clipName =TextManager.get_CmdfileName();
-        
-        SavWav.Save(clipName, audioSource.clip, Application.persistentDataPath + "/wav/");
+        //wav폴더
+        SavWav.Save(clipName, audioSource.clip,  "C:/Users/최수아/Documents"+"/UGRP/sync_system/computer/download/" );
     }
 
     public void OnRateButton()

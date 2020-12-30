@@ -11,7 +11,8 @@ public class SendRoutineManager : MonoBehaviour
 
     void Start()
     {
-        dataPath = Application.persistentDataPath + "/wav/";
+        //wav폴더
+        dataPath =  "C:/Users/최수아/Documents"+"/UGRP/sync_system/computer/download/";
 
     }
 
