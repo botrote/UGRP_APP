@@ -37,7 +37,7 @@ public class AudioSerializer : MonoBehaviour
         {
 			fileName += ".wav";
 		}
-        string path = Path.Combine(Application.persistentDataPath + "/data/", fileName);
+        string path = Path.Combine(Application.persistentDataPath + "/wav/", fileName);
 
         if(File.Exists(path) == false)
         {
@@ -110,7 +110,7 @@ public class AudioSerializer : MonoBehaviour
         Debug.Log(channels);
         Debug.Log(soundData.Length);
 
-        SavWav.Save(fileName, clip);
+        SavWav.Save(fileName, clip, Application.persistentDataPath + "/data/");
         return clip;
     }
 }

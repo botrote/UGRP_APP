@@ -70,7 +70,7 @@ public class SoundRecorder : MonoBehaviour
     public void RecordSave()
     {
         
-        SavWav.Save(clipName, audio.clip);
+        SavWav.Save(clipName, audio.clip, Application.persistentDataPath + "/data/");
         // StatusText.enabled = true;
         // StatusText.text = "ClipName " + clipName + " saved"; 
         

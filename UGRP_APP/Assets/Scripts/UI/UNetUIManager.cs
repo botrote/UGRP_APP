@@ -8,14 +8,16 @@ public class UNetUIManager : NetworkManager
     private Text StatusText;
     private FileSlot fileSlot;
     SoundRecorder s;
-
+    int i;
     void Start()
     {
         fileSlot = null;
+        //IP주소
         networkAddress = "192.168.219.118";
         s = GameObject.Find("RecordManager").GetComponent<SoundRecorder>();
         // OpenServer();
         ConnectClientToServer();
+        i=0;
     }
 
     public void OnInputAddress()
@@ -31,6 +33,7 @@ public class UNetUIManager : NetworkManager
         networkPort = 7777;
 
         StartServer();  
+        
     }
 
     public void OpenHost()
@@ -73,4 +76,14 @@ public class UNetUIManager : NetworkManager
         StartCoroutine(fileSlot.UploadWavCoroutine(true));
         Debug.Log("[Client]OnSendToHost Finished.");
     }
+
+    public void CloseClient(){
+        if(i<5){
+            i++;
+        }
+        else {
+            StopClient();
+        }
+    }
+
 }

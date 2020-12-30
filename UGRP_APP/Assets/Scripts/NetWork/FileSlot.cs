@@ -36,18 +36,18 @@ public class FileSlot : NetworkBehaviour
         
     }
 
-    [Command]
+    [Command] 
     public void CmdUploadTxt(byte[] data)
     {
         Debug.Log("cmd text called");
         txtFileData = data;
-        DecodeTextFile();
+        CmdDecodeTextFile();
     }
 
     [Command]
     public void CmdRate(int rating)
     {
-        TextManager.TextSave("rate", rating.ToString());
+        TextManager.CmdTextWrite(rating.ToString(), 2, "rate");
     }
 
     [ClientRpc]
@@ -133,15 +133,25 @@ public class FileSlot : NetworkBehaviour
     {
         Debug.Log("decode text called");
         string encoded = Encoding.UTF8.GetString(txtFileData);
-        GameObject.Find("SendRoutineManager").GetComponent<SendRoutineManager>().OnTextRecieved(this, encoded);
+        string date = System.DateTime.Now.ToString().Replace("-", "").Replace(":", "").Replace(" ", "").Replace("P", "").Replace("A", "").Replace("M", "_");
+     
+        GameObject.Find("SendRoutineManager").GetComponent<SendRoutineManager>().OnTextRecieved(this, encoded, date);
         TextManager.TextWrite(encoded);
+    }
+    void CmdDecodeTextFile()
+    {
+        Debug.Log("decode text called");
+        string encoded = Encoding.UTF8.GetString(txtFileData);
+        string date = System.DateTime.Now.ToString().Replace("-", "").Replace(":", "").Replace(" ", "").Replace("P", "").Replace("A", "").Replace("M", "_");
+        GameObject.Find("SendRoutineManager").GetComponent<SendRoutineManager>().OnTextRecieved(this, encoded, date);
+        TextManager.CmdTextWrite(encoded, 1, date);
     }
 
     void DecodeWavFile()
     {
         Debug.Log("decode wav called");
         GameObject.Find("AudioSource").GetComponent<AudioSource>().clip = audioSerializer.StoreByteClip(wavFileData);
-        File.Delete(Path.Combine(Application.persistentDataPath + "/data/", "result.wav"));
+        //File.Delete(Path.Combine(Application.persistentDataPath + "/data/", "result.wav"));
         GameObject.Find("Canvas").GetComponent<SentTxtSceneUIManager>().SetLoadingImageEnabled(false);
     }
     void DecodeWavFile2()

@@ -54,8 +54,9 @@ public class SentTxtSceneUIManager : MonoBehaviour
 
     public void OnSaveButton()
     {
-        string clipName = System.DateTime.Now.ToString().Replace("-", "").Replace(":", "").Replace(" ", "").Replace("P", "").Replace("A", "").Replace("M", "_");
-        SavWav.Save(clipName, audioSource.clip);
+        string clipName =TextManager.get_CmdfileName();
+        
+        SavWav.Save(clipName, audioSource.clip, Application.persistentDataPath + "/wav/");
     }
 
     public void OnRateButton()

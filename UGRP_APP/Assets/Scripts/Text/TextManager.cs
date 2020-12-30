@@ -5,17 +5,36 @@ using System.IO;
 using UnityEngine;
 using UnityEngine.UI; 
 public static class TextManager
-{ 
+{       
+    static string CmdfileName;
     public static void TextWrite(string txt){
         string fileName = System.DateTime.Now.ToString().Replace("-", "").Replace(":", "").Replace(" ", "").Replace("P", "").Replace("A", "").Replace("M", "_");
-        TextSave(fileName, txt);
+        TextSave(fileName, txt, Application.persistentDataPath + "/data/");
 
     }
-    public static bool TextSave(string filename, string txt){
+
+    public static void CmdTextWrite(string txt, int num, string date){ 
+        
+        if(num == 1){  //user가 보내는 텍스트
+            //CmdfileName = System.DateTime.Now.ToString().Replace("-", "").Replace(":", "").Replace(" ", "").Replace("P", "").Replace("A", "").Replace("M", "_");
+            CmdfileName = date;
+            //TextSave(CmdfileName, txt, Application.persistentDataPath + "/text/");
+            TextSave(CmdfileName, txt, Application.persistentDataPath+ "/text/");
+        }   
+        else if(num == 2){ //rating
+            TextSave(CmdfileName, txt, Application.persistentDataPath+ "/feedback/");
+        }      
+
+    }
+    public static string get_CmdfileName(){
+        return CmdfileName;
+    }
+
+    public static bool TextSave(string filename, string txt, string path){
         if(!filename.ToLower().EndsWith(".txt")){
             filename += ".txt" ;
         }
-	    var filepath = Path.Combine(Application.persistentDataPath + "/data/", filename);
+	    var filepath = Path.Combine(path, filename);
         
         Directory.CreateDirectory(Path.GetDirectoryName(filepath));
 
