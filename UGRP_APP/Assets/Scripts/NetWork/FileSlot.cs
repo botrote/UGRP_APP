@@ -17,7 +17,6 @@ public class FileSlot : NetworkBehaviour
     }
 
     int packetNum;
-    private AudioSerializer audioSerializer;
     public byte[] txtFileData;
     public byte[] wavFileData;
     public AudioClip clip;
@@ -27,7 +26,8 @@ public class FileSlot : NetworkBehaviour
         packetNum = -1;
         txtFileData = null;
         wavFileData = null;
-        audioSerializer = GameObject.Find("AudioSerializer").GetComponent<AudioSerializer>();
+        
+        DontDestroyOnLoad(this);
     }
 
     // Update is called once per frame
@@ -118,6 +118,7 @@ public class FileSlot : NetworkBehaviour
 
     public IEnumerator WavEncodingCoroutine(string fileName)
     {
+        AudioSerializer audioSerializer = GameObject.Find("AudioSerializer").GetComponent<AudioSerializer>();
         StartCoroutine(audioSerializer.LoadAudioClipToByte(fileName));
         while(audioSerializer.isLoading == true)
             yield return null;
@@ -139,6 +140,7 @@ public class FileSlot : NetworkBehaviour
 
     void DecodeWavFile()
     {
+        AudioSerializer audioSerializer = GameObject.Find("AudioSerializer").GetComponent<AudioSerializer>();
         Debug.Log("decode wav called");
         GameObject.Find("AudioSource").GetComponent<AudioSource>().clip = audioSerializer.StoreByteClip(wavFileData);
         File.Delete(Path.Combine(Application.persistentDataPath + "/data/", "result.wav"));
@@ -146,6 +148,7 @@ public class FileSlot : NetworkBehaviour
     }
     void DecodeWavFile2()
     {
+        AudioSerializer audioSerializer = GameObject.Find("AudioSerializer").GetComponent<AudioSerializer>();
         Debug.Log("decode wav called");
         //GameObject.Find("AudioSource").GetComponent<AudioSource>().clip = 
         audioSerializer.StoreByteClip(wavFileData);
