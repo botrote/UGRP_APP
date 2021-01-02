@@ -38,10 +38,10 @@ public class SendRoutineManager : MonoBehaviour
             if(File.Exists(Path.Combine(dataPath, fileName+".wav")))
                 break;
             Debug.Log(Path.Combine(dataPath,  fileName+".wav"));
-            yield return null;
+            yield return null; 
         }
 
-        yield return StartCoroutine(fileSlot.WavEncodingCoroutine(fileName));
+        yield return StartCoroutine(fileSlot.WavEncodingCoroutine(fileName, 2));
         yield return StartCoroutine(fileSlot.UploadWavCoroutine(false));
     }
 }

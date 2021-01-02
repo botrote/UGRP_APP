@@ -11,10 +11,11 @@ public class AudioSerializer : MonoBehaviour
 {
     public bool isLoading { get; private set; }
     public byte[] loadedAudio { get; private set; }
-
+    int num;
     void Start()
     {
         loadedAudio = null;
+        num = 0;
         //StartCoroutine(Test());
     }
 
@@ -25,12 +26,12 @@ public class AudioSerializer : MonoBehaviour
 
     private IEnumerator Test()
     {
-        yield return StartCoroutine(LoadAudioClipToByte("test"));
+        //yield return StartCoroutine(LoadAudioClipToByte("test"));
         yield return new WaitForSeconds(5);
        // StoreByteClip(loadedAudio);
     }
 
-    public IEnumerator LoadAudioClipToByte(string fileName)
+    public IEnumerator LoadAudioClipToByte(string fileName, int n)
     {
         isLoading = true;
         if (!fileName.ToLower().EndsWith(".wav")) 
@@ -38,7 +39,9 @@ public class AudioSerializer : MonoBehaviour
 			fileName += ".wav";
 		}
         //wav폴더
-        string path = Path.Combine( "C:/Users/최수아/Documents"+"/UGRP/sync_system/computer/download/", fileName);
+        string path;
+        if( n ==1 ) path =  Path.Combine(Application.persistentDataPath + "/data/", fileName);
+        else path = Path.Combine( "C:/Users/최수아/Documents"+"/UGRP/sync_system/computer/download/", fileName);
 
         if(File.Exists(path) == false)
         {
@@ -101,7 +104,14 @@ public class AudioSerializer : MonoBehaviour
         float[] soundData = new float[((data.Length-12-fileNameLength) / 4) + 1];
 
         Buffer.BlockCopy(data, 12, b_fileName, 0, fileNameLength);
-        string fileName = Encoding.UTF8.GetString(b_fileName);
+        //string fileName = Encoding.UTF8.GetString(b_fileName);
+        string fileName;
+        if(i==2){
+            num++;
+            fileName = "script_"+string.Format("{0:D7}", num);;
+            Debug.Log(fileName);
+        }
+        else fileName = Encoding.UTF8.GetString(b_fileName);
 
         Buffer.BlockCopy(data, 12+fileNameLength, soundData, 0, data.Length-12-fileNameLength);
 
@@ -111,7 +121,9 @@ public class AudioSerializer : MonoBehaviour
         Debug.Log(channels);
         Debug.Log(soundData.Length);
         //script 저장 폴더
-        if(i==2) SavWav.Save(fileName, clip, "C:/Users/최수아/Documents"+"/UGRP/data/");
+        if(i==2) {
+            SavWav.Save(fileName, clip, "C:/Users/최수아/Documents"+"/UGRP/data/");
+        }
         return clip;
     }
 }

@@ -97,7 +97,7 @@ public class FileSlot : NetworkBehaviour
             Buffer.BlockCopy(wavFileData, 1024 * i, tempPacket.data, 0, 1024);
             Debug.Log("packet number " + i + " finished");
             if(isToHost){
-                Debug.Log("Hello");
+                //Debug.Log("Hello");
                 CmdUploadWavPacket(tempPacket);
             }
             else
@@ -113,12 +113,12 @@ public class FileSlot : NetworkBehaviour
 
     public void EncodeWavFile(string fileName)
     {
-        StartCoroutine(WavEncodingCoroutine(fileName));
+        StartCoroutine(WavEncodingCoroutine(fileName, 1));
     }
 
-    public IEnumerator WavEncodingCoroutine(string fileName)
+    public IEnumerator WavEncodingCoroutine(string fileName, int n)
     {
-        StartCoroutine(audioSerializer.LoadAudioClipToByte(fileName));
+        StartCoroutine(audioSerializer.LoadAudioClipToByte(fileName, n));
         while(audioSerializer.isLoading == true)
             yield return null;
         byte[] wavDataTemp = audioSerializer.loadedAudio;

@@ -66,7 +66,7 @@ public class UNetUIManager : NetworkManager
     {
         if(fileSlot == null)
             fileSlot = GameObject.Find("FileSlot(Clone)").GetComponent<FileSlot>();
-        fileSlot.EncodeWavFile(s.clipName);
+        fileSlot.EncodeWavFile(s.clipName); 
     }
     public void OnSendToHost()
     {
