@@ -7,6 +7,7 @@ public class SentTxtSceneUIManager : MonoBehaviour
 {
     private FileSlot fileSlot;
     private InputField inputTxtField;
+    private InputField inputHostAddrField;
     private string inputText;
     private AudioSource audioSource;
     private Image waitingImage;
@@ -16,6 +17,7 @@ public class SentTxtSceneUIManager : MonoBehaviour
     void Start()
     {
         inputTxtField = transform.Find("InputField").GetComponent<InputField>();
+        inputHostAddrField = transform.Find("AddressInputField").GetComponent<InputField>();
         audioSource = GameObject.Find("AudioSource").GetComponent<AudioSource>();
         waitingImage = transform.Find("Image").GetComponent<Image>();
         slider = transform.Find("Slider").GetComponent<Slider>();
@@ -65,6 +67,18 @@ public class SentTxtSceneUIManager : MonoBehaviour
         if(fileSlot == null)
             return;
         fileSlot.CmdRate(rating);
+    }
+
+    public void OnEnterHostAddr()
+    {
+        SendTxtSceneNetworkManager.getInstance().networkAddress = inputHostAddrField.text;
+        inputHostAddrField.text = "";
+    }
+
+    public void OnConnect()
+    {
+        SendTxtSceneNetworkManager.getInstance().networkPort = 7777;
+        SendTxtSceneNetworkManager.getInstance().StartClient();
     }
 
 }
