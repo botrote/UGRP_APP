@@ -5,7 +5,6 @@ using UnityEngine.UI;
 public class UNetUIManager : NetworkManager
 {
     private InputField inputAddressField;
-    private Text StatusText;
     private FileSlot fileSlot;
     SoundRecorder s;
     int i;
@@ -14,10 +13,13 @@ public class UNetUIManager : NetworkManager
         fileSlot = null;
         //IP주소
         networkAddress = "192.168.219.118";
-        s = GameObject.Find("RecordManager").GetComponent<SoundRecorder>();
+      
         // OpenServer();
         ConnectClientToServer();
         i=0;
+    }
+    public void start_recordmanager(){
+        if(i==0) s = GameObject.Find("RecordManager").GetComponent<SoundRecorder>();
     }
 
     public void OnInputAddress()
@@ -60,7 +62,6 @@ public class UNetUIManager : NetworkManager
         base.OnServerConnect(conn);
         
         Debug.Log("[Client]Connect Server Sucess.");
-        StatusText.text = "[Client]Connect Server Success.";
     }
     public void OnEndRecord()
     {

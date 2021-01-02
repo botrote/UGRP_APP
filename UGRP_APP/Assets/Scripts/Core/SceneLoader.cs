@@ -44,7 +44,7 @@ public class SceneLoader : MonoBehaviour
 
     public void startScene2()
     {
-        SceneManager.LoadScene("SampleScene2");
+        SceneManager.LoadScene("startScene2");
     }
 
     public void startScene3()
@@ -69,7 +69,6 @@ public class SceneLoader : MonoBehaviour
     {
         SceneManager.LoadScene("SendTxtScene");
     }
-
     public void quitApp()
     {
         Application.Quit();

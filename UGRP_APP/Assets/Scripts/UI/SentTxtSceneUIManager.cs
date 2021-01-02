@@ -18,9 +18,9 @@ public class SentTxtSceneUIManager : MonoBehaviour
     {
         inputTxtField = transform.Find("InputField").GetComponent<InputField>();
         audioSource = GameObject.Find("AudioSource").GetComponent<AudioSource>();
-        waitingImage = transform.Find("Image").GetComponent<Image>();
+        //waitingImage = transform.Find("Image").GetComponent<Image>();
         slider = transform.Find("Slider").GetComponent<Slider>();
-        waitingImage.enabled = false;
+        //waitingImage.enabled = false;
         rating = 0;
     }
 
@@ -45,7 +45,7 @@ public class SentTxtSceneUIManager : MonoBehaviour
 
     public void SetLoadingImageEnabled(bool b)
     {
-        waitingImage.enabled = b;
+        //waitingImage.enabled = b;
     }
 
     public void OnPlaybutton()
