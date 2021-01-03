@@ -9,18 +9,17 @@ public class SentTxtSceneUIManager : MonoBehaviour
     private InputField inputTxtField;
     private string inputText;
     private AudioSource audioSource;
-    private Image waitingImage;
-    private Slider slider;
-    private int rating;
+    private GameObject loadingPanel;
+    private GameObject ratePanel;
     // Start is called before the first frame update
     void Start()
     {
         inputTxtField = transform.Find("InputField").GetComponent<InputField>();
         audioSource = GameObject.Find("AudioSource").GetComponent<AudioSource>();
-        waitingImage = transform.Find("Image").GetComponent<Image>();
-        slider = transform.Find("Slider").GetComponent<Slider>();
-        waitingImage.enabled = false;
-        rating = 0;
+        loadingPanel = transform.Find("LoadingPanel").gameObject;
+        loadingPanel.SetActive(false);
+        ratePanel = transform.Find("RatePanel").gameObject;
+        ratePanel.SetActive(false);
     }
 
     // Update is called once per frame
@@ -44,7 +43,7 @@ public class SentTxtSceneUIManager : MonoBehaviour
 
     public void SetLoadingImageEnabled(bool b)
     {
-        waitingImage.enabled = b;
+        loadingPanel.SetActive(b);
     }
 
     public void OnPlaybutton()
@@ -60,8 +59,19 @@ public class SentTxtSceneUIManager : MonoBehaviour
 
     public void OnRateButton()
     {
-        Debug.Log((int)(slider.value * 10));
-        rating = (int)(slider.value * 10);
+        ratePanel.SetActive(true);
+    }
+
+    public void OnRateQuitButton()
+    {
+        ratePanel.SetActive(false);
+        ratePanel.transform.Find("Slider").gameObject.GetComponent<Slider>().value = 0;
+    }
+
+    public void OnRateSendButton()
+    {
+        Slider slider = ratePanel.transform.Find("Slider").gameObject.GetComponent<Slider>();
+        int rating = (int)(slider.value * 10);
         if(fileSlot == null)
             return;
         fileSlot.CmdRate(rating);
