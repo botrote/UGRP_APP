@@ -32,7 +32,7 @@ public class ScriptManager : MonoBehaviour
             i++;
         }
         else {
-            SceneManager.LoadScene("startScene");
+            SceneManager.LoadScene("LoadingScene");
         }
     }
 }

@@ -5,17 +5,37 @@ using System.IO;
 using UnityEngine;
 using UnityEngine.UI; 
 public static class TextManager
-{ 
+{       
+    static string CmdfileName;
     public static void TextWrite(string txt){
         string fileName = System.DateTime.Now.ToString().Replace("-", "").Replace(":", "").Replace(" ", "").Replace("P", "").Replace("A", "").Replace("M", "_");
-        TextSave(fileName, txt);
+        TextSave(fileName, txt, Application.persistentDataPath + "/data/");
 
     }
-    public static bool TextSave(string filename, string txt){
+
+    public static void CmdTextWrite(string txt, int num, string date){ 
+        
+        if(num == 1){  //user가 보내는 텍스트
+            //CmdfileName = System.DateTime.Now.ToString().Replace("-", "").Replace(":", "").Replace(" ", "").Replace("P", "").Replace("A", "").Replace("M", "_");
+            CmdfileName = date;
+            //text 폴더
+            TextSave(CmdfileName, txt, "C:/Users/최수아/Documents"+ "/UGRP/sync_system/computer/upload/");
+        }   
+        else if(num == 2){ //feedback폴더
+            TextSave(CmdfileName, txt, "C:/Users/최수아/Documents"+ "/UGRP/feedback_system/computer/upload/");
+        }      
+
+    }
+    public static string get_CmdfileName(){
+        Debug.Log("get file name:"+CmdfileName);
+        return CmdfileName;
+    }
+
+    public static bool TextSave(string filename, string txt, string path){
         if(!filename.ToLower().EndsWith(".txt")){
             filename += ".txt" ;
         }
-	    var filepath = Path.Combine(Application.persistentDataPath + "/data/", filename);
+	    var filepath = Path.Combine(path, filename);
         
         Directory.CreateDirectory(Path.GetDirectoryName(filepath));
 

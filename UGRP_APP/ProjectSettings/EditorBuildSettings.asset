@@ -17,6 +17,15 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/SendTxtScene.unity
     guid: 28ed3a91400de2a45a41be1df27fa53c
+  - enabled: 1
+    path: Assets/Scenes/LoadingScene.unity
+    guid: e9eedb1bda5e0894aa416c4a8030d890
+  - enabled: 1
+    path: Assets/Scenes/startScene2.unity
+    guid: 22a58fd1f643ff5458727a0eed67884a
+  - enabled: 1
+    path: Assets/Scenes/RatingScene.unity
+    guid: e788fcf645ebfb64fb53e9c59623bf94
   - enabled: 0
     path: Assets/Scenes/Unused/SampleScene0.unity
     guid: 8a10480dcd667c54b87d879a4a0e2f00

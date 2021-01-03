@@ -6,7 +6,7 @@ public class UNetUIManager : MonoBehaviour
 {
     private FileSlot fileSlot;
     SoundRecorder s;
-
+    int i;
     void Start()
     {
         fileSlot = GameObject.Find("FileSlot(Clone)").GetComponent<FileSlot>();
@@ -26,4 +26,5 @@ public class UNetUIManager : MonoBehaviour
         StartCoroutine(fileSlot.UploadWavCoroutine(true));
         Debug.Log("[Client]OnSendToHost Finished.");
     }
+
 }
