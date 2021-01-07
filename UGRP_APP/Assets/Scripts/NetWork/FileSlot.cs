@@ -20,6 +20,8 @@ public class FileSlot : NetworkBehaviour
     public byte[] txtFileData;
     public byte[] wavFileData;
     public AudioClip clip;
+    public bool isEncodingWav { get; private set; }
+    public bool isSendingWav { get; private set; }
     // Start is called before the first frame update
     void Start()
     {
@@ -87,6 +89,7 @@ public class FileSlot : NetworkBehaviour
     public IEnumerator UploadWavCoroutine(bool isToHost)
     {
         Debug.Log(isToHost);
+        isSendingWav = true;
         for(int i = 0; i < packetNum; i++)
         {
             WavPacket tempPacket;
@@ -104,6 +107,7 @@ public class FileSlot : NetworkBehaviour
                 RpcUploadWavPacket(tempPacket);
             yield return null;
         }
+        isSendingWav = false;
     }
 
     public void EncodeTextFile(string content)
@@ -118,6 +122,7 @@ public class FileSlot : NetworkBehaviour
 
     public IEnumerator WavEncodingCoroutine(string fileName, int n)
     {
+        isEncodingWav = true;
         AudioSerializer audioSerializer = GameObject.Find("AudioSerializer").GetComponent<AudioSerializer>();
         StartCoroutine(audioSerializer.LoadAudioClipToByte(fileName, n));
         while(audioSerializer.isLoading == true)

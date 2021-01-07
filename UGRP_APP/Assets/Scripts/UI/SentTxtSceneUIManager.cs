@@ -12,10 +12,16 @@ public class SentTxtSceneUIManager : MonoBehaviour
     private AudioSource audioSource;
     private GameObject loadingPanel;
     private GameObject ratePanel;
+    private Button playButton;
+    private Button saveButton;
+    private Button rateButton;
 
     // Start is called before the first frame update
     void Start()
     {
+        playButton = transform.Find("PlayButton").gameObject.GetComponent<Button>();
+        saveButton = transform.Find("SaveButton").gameObject.GetComponent<Button>();
+        rateButton = transform.Find("RateButton").gameObject.GetComponent<Button>();
         inputTxtField = transform.Find("InputField").GetComponent<InputField>();
         audioSource = GameObject.Find("AudioSource").GetComponent<AudioSource>();
         loadingPanel = transform.Find("LoadingPanel").gameObject;
@@ -46,6 +52,9 @@ public class SentTxtSceneUIManager : MonoBehaviour
     public void SetLoadingImageEnabled(bool b)
     {
         loadingPanel.SetActive(b);
+        playButton.interactable = !b;
+        saveButton.interactable = !b;
+        rateButton.interactable = !b;
     }
 
     public void OnPlaybutton()
@@ -55,7 +64,7 @@ public class SentTxtSceneUIManager : MonoBehaviour
 
     public void OnSaveButton()
     {
-        string clipName =clipName = System.DateTime.Now.ToString().Replace("-", "").Replace(":", "").Replace(" ", "").Replace("P", "").Replace("A", "").Replace("M", "_");
+        string clipName = DateTimeGetter.getNowString();
         string filepath = Application.persistentDataPath + "/data/";
         Debug.Log(clipName);
         //wav폴더
