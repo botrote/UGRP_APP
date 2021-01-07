@@ -8,7 +8,7 @@ public static class TextManager
 {       
     static string CmdfileName;
     public static void TextWrite(string txt){
-        string fileName = System.DateTime.Now.ToString().Replace("-", "").Replace(":", "").Replace(" ", "").Replace("P", "").Replace("A", "").Replace("M", "_");
+        string fileName = DateTimeGetter.getNowString();
         TextSave(fileName, txt, Application.persistentDataPath + "/data/");
 
     }
@@ -16,7 +16,6 @@ public static class TextManager
     public static void CmdTextWrite(string txt, int num, string date){ 
         
         if(num == 1){  //user가 보내는 텍스트
-            //CmdfileName = System.DateTime.Now.ToString().Replace("-", "").Replace(":", "").Replace(" ", "").Replace("P", "").Replace("A", "").Replace("M", "_");
             CmdfileName = date;
             //text 폴더
             TextSave(CmdfileName, txt, "C:/Users/최수아/Documents"+ "/UGRP/sync_system/computer/upload/");

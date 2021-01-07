@@ -128,13 +128,14 @@ public class FileSlot : NetworkBehaviour
         Debug.Log(packetNum);
         wavFileData = new byte[1024 * packetNum];
         wavDataTemp.CopyTo(wavFileData, 0);
+        isEncodingWav = false;
     }
 
     void DecodeTextFile()
     {
         Debug.Log("decode text called");
         string encoded = Encoding.UTF8.GetString(txtFileData);
-        string date = System.DateTime.Now.ToString().Replace("-", "").Replace(":", "").Replace(" ", "").Replace("P", "").Replace("A", "").Replace("M", "_");
+        string date = DateTimeGetter.getNowString();
      
         GameObject.Find("SendRoutineManager").GetComponent<SendRoutineManager>().OnTextRecieved(this, encoded, date);
         TextManager.TextWrite(encoded);
@@ -143,7 +144,7 @@ public class FileSlot : NetworkBehaviour
     {
         Debug.Log("decode text called");
         string encoded = Encoding.UTF8.GetString(txtFileData);
-        string date = System.DateTime.Now.ToString().Replace("-", "").Replace(":", "").Replace(" ", "").Replace("P", "").Replace("A", "").Replace("M", "_");
+        string date = DateTimeGetter.getNowString();
         GameObject.Find("SendRoutineManager").GetComponent<SendRoutineManager>().OnTextRecieved(this, encoded, date);
         TextManager.CmdTextWrite(encoded, 1, date);
     }
