@@ -5,22 +5,22 @@ EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Scenes:
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/ConnectScene.unity
     guid: 4245bfb00ab3ffd45a4c1a3caccdeba6
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/startScene.unity
     guid: 2cda990e2423bbf4892e6590ba056729
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/ScriptScene.unity
     guid: 75db4e98f6577ae47bff88dfedaba909
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/SendTxtScene.unity
     guid: 28ed3a91400de2a45a41be1df27fa53c
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/LoadingScene.unity
     guid: e9eedb1bda5e0894aa416c4a8030d890
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/startScene2.unity
     guid: 22a58fd1f643ff5458727a0eed67884a
   - enabled: 0
@@ -47,7 +47,7 @@ EditorBuildSettings:
   - enabled: 0
     path: Assets/Scenes/Unused/NetworkScene.unity
     guid: 0a43777d8243ea743935da1795f72898
-  - enabled: 0
+  - enabled: 1
     path: Assets/Scenes/UNetHostScene.unity
     guid: 31f6d81e88792134b8dc0b649ed1df7f
   m_configObjects: {}
