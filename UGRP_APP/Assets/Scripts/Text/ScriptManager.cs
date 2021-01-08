@@ -7,12 +7,13 @@ using UnityEngine.SceneManagement;
 public class ScriptManager : MonoBehaviour
 {
     // Start is called before the first frame update
-    public int i = 0;
+    public int i;
     public string[] script = new string[5];
     public Text info_text;
     void Start()
     {
         info_text = GameObject.Find("Info_Text").GetComponent<Text>();
+        i=0;
         script[0] = string.Copy("0");
         script[1] = string.Copy("1");
         script[2] = string.Copy("2");

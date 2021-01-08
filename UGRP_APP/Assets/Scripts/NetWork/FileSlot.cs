@@ -15,14 +15,16 @@ public class FileSlot : NetworkBehaviour
         public int packetSize;
         public byte[] data; 
     }
-
+    int i;
     int packetNum;
     public byte[] txtFileData;
     public byte[] wavFileData;
     public AudioClip clip;
+    private SceneLoader sceneLoader;
     // Start is called before the first frame update
     void Start()
     {
+        i=0;
         packetNum = -1;
         txtFileData = null;
         wavFileData = null;
@@ -129,15 +131,11 @@ public class FileSlot : NetworkBehaviour
         wavFileData = new byte[1024 * packetNum];
         wavDataTemp.CopyTo(wavFileData, 0);
     }
-
-    void DecodeTextFile()
+     void DecodeTextFile()
     {
-        Debug.Log("decode text called");
-        string encoded = Encoding.UTF8.GetString(txtFileData);
-        string date = System.DateTime.Now.ToString().Replace("-", "").Replace(":", "").Replace(" ", "").Replace("P", "").Replace("A", "").Replace("M", "_");
-     
-        GameObject.Find("SendRoutineManager").GetComponent<SendRoutineManager>().OnTextRecieved(this, encoded, date);
-        TextManager.TextWrite(encoded);
+        Debug.Log("decode text!!!!");
+        sceneLoader = GameObject.Find("SceneManager").GetComponent<SceneLoader>();
+        sceneLoader.startScene2();
     }
     void CmdDecodeTextFile()
     {
@@ -158,10 +156,15 @@ public class FileSlot : NetworkBehaviour
     }
     void DecodeWavFile2()
     {
+        i++;
         AudioSerializer audioSerializer = GameObject.Find("AudioSerializer").GetComponent<AudioSerializer>();
-        Debug.Log("decode wav called");
-        //GameObject.Find("AudioSource").GetComponent<AudioSource>().clip = 
+        Debug.Log("decode wav2 called");
         audioSerializer.StoreByteClip(wavFileData, 2);
+        if(i==5){
+            GameObject.Find("SendRoutineManager2").GetComponent<SendRoutineManager2>().OnScriptFinished(this);
+            i=0;
+        }
+
         //File.Delete(Path.Combine(Application.persistentDataPath + "/data/", "result.wav"));
     }
 }

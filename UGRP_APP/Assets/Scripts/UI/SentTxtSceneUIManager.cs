@@ -108,7 +108,7 @@ public class SentTxtSceneUIManager : MonoBehaviour
         else rating = 0;
         
         fileSlot.CmdRate(rating);
-        
+        ratePanel.SetActive(false);
     }
 
 }

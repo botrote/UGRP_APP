@@ -17,22 +17,15 @@
        15줄
 
        AudioSerializer.cs
-       41줄, 114줄
+       44줄, 125줄
 
-2. IP주소 설정
-     UNetUIManager.cs
-       16줄
-
-3. 본인 local IP 확인하는법
-     cmd창 -> 명령어 ipconfig > IPv4 주소
-
-4. 빌드
+2. 빌드
 
      file > Build Settings 클릭
 
      ​	Scenes In Build
 
-     ​		Client:  startScene, ScriptScene, SendTxtScene (위에 3개) 클릭
+     ​		Client:  ConnectScene, startScene, ScriptScene, SendTxtScene, LoadingScene, startScene2 (위에 6개) 클릭
 
      ​		Host: UNetHostScene(가장 아래거) 클릭
 
@@ -44,9 +37,18 @@
 
      Build 버튼 클릭
 
-5. 실행 (저장한 폴더에서 찾아서 실행시키면 됩니다.)
+3. 실행 (저장한 폴더에서 찾아서 실행시키면 됩니다.)
 
    1) Host 실행, LAN Server Only 클릭
 
-   2) Client 실행, LAN client 클릭
+   2) Client 실행, 본인 IP주소 입력
 
+   ​	(IP 확인: cmd창 -> 명령어 ipconfig > IPv4 주소)
+
+   3) 순서
+
+   목소리 추가 버튼 > Script 녹음화면 > 로딩화면 > 메인화면 > CD버튼 > Text 보내는 화면
+
+   
+
+   

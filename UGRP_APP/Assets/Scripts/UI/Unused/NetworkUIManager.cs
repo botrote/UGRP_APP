@@ -88,8 +88,9 @@ public class NetworkUIManager : UIManager
         if(fileSlot == null)
             fileSlot = GameObject.Find("FileSlot(Clone)").GetComponent<FileSlot>();
 
-        if(fileType == FileType.Text)
-            fileSlot.RpcUploadTxt(fileSlot.txtFileData);
+        if(fileType == FileType.Text){
+            //fileSlot.RpcUploadTxt(fileSlot.txtFileData);
+        }
         else if(fileType == FileType.Wav)    
             StartCoroutine(fileSlot.UploadWavCoroutine(false));
     }
