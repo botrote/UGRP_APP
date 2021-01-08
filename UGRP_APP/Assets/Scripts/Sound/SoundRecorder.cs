@@ -54,7 +54,7 @@ public class SoundRecorder : MonoBehaviour
         AudioClip.Destroy(audio.clip);
         audio.clip = newClip;
 
-        clipName = System.DateTime.Now.ToString().Replace("-", "").Replace(":", "").Replace(" ", "").Replace("P", "").Replace("A", "").Replace("M", "_");
+        clipName = DateTimeGetter.getNowString();
         audio.clip.name = clipName;
         // StatusText.enabled = true;
         // StatusText.text = "Recording finished";

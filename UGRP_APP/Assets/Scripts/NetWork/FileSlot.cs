@@ -21,6 +21,8 @@ public class FileSlot : NetworkBehaviour
     public byte[] wavFileData;
     public AudioClip clip;
     private SceneLoader sceneLoader;
+    public bool isEncodingWav { get; private set; }
+    public bool isSendingWav { get; private set; }
     // Start is called before the first frame update
     void Start()
     {
@@ -89,6 +91,7 @@ public class FileSlot : NetworkBehaviour
     public IEnumerator UploadWavCoroutine(bool isToHost)
     {
         Debug.Log(isToHost);
+        isSendingWav = true;
         for(int i = 0; i < packetNum; i++)
         {
             WavPacket tempPacket;
@@ -106,6 +109,7 @@ public class FileSlot : NetworkBehaviour
                 RpcUploadWavPacket(tempPacket);
             yield return null;
         }
+        isSendingWav = false;
     }
 
     public void EncodeTextFile(string content)
@@ -120,6 +124,7 @@ public class FileSlot : NetworkBehaviour
 
     public IEnumerator WavEncodingCoroutine(string fileName, int n)
     {
+        isEncodingWav = true;
         AudioSerializer audioSerializer = GameObject.Find("AudioSerializer").GetComponent<AudioSerializer>();
         StartCoroutine(audioSerializer.LoadAudioClipToByte(fileName, n));
         while(audioSerializer.isLoading == true)
@@ -130,6 +135,7 @@ public class FileSlot : NetworkBehaviour
         Debug.Log(packetNum);
         wavFileData = new byte[1024 * packetNum];
         wavDataTemp.CopyTo(wavFileData, 0);
+        isEncodingWav = false;
     }
      void DecodeTextFile()
     {
@@ -141,7 +147,7 @@ public class FileSlot : NetworkBehaviour
     {
         Debug.Log("decode text called");
         string encoded = Encoding.UTF8.GetString(txtFileData);
-        string date = System.DateTime.Now.ToString().Replace("-", "").Replace(":", "").Replace(" ", "").Replace("P", "").Replace("A", "").Replace("M", "_");
+        string date = DateTimeGetter.getNowString();
         GameObject.Find("SendRoutineManager").GetComponent<SendRoutineManager>().OnTextRecieved(this, encoded, date);
         TextManager.CmdTextWrite(encoded, 1, date);
     }

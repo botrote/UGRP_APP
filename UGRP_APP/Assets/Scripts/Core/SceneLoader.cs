@@ -75,6 +75,11 @@ public class SceneLoader : MonoBehaviour
         SceneManager.LoadScene("ConnectScene");
     }
 
+    public void startLoadScene()
+    {
+        SceneManager.LoadScene("LoadingScene");
+    }
+
     public void quitApp()
     {
         Application.Quit();
